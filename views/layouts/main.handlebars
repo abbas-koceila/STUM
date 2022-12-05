@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+  <!-- Bootstrap core CSS -->
+
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- <script src="https://kit.fontawesome.com/b99e675b6e.js"></script> -->
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./css/normalize.css">
+
+  <link rel="stylesheet" href="../../dist/css/form.css">
+
+  <link rel="stylesheet" href="./css/style.css">
+  {{#each styles}}
+  <link rel="stylesheet" href="{{this}}">
+  {{/each}}
+
+  {{#each scripts}}
+  <script type="module" src="{{this}}"></script>
+  {{/each}}
+</head>
+
+<body>
+  {{>header}}
+
+  <main>
+    <div class="wrapper">
+      {{{body}}}
+    </div>
+  </main>
+
+
+
+  <!-- Bootstrap core JavaScript -->
+  {{!--
+  <script type="module" src="./js/main.js"></script> --}}
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+
+<footer>
+  {{>footer}}
+
+</footer>
+
+</html>

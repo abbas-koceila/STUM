@@ -1,0 +1,91 @@
+{{!-- <div id="title">
+  <h1>STUM</h1>
+</div> --}}
+<section id="why-us" class="why-us">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-lg-4 d-flex align-items-stretch">
+            <div class="content">
+              <h3>Quand aller à l’urgence?</h3>
+              <p>
+                Nos urgences sont ouvertes 7 jours sur 7, 24 h sur 24. Nos équipes seront prêtes à vous accueillir et à vous prodiguer les soins nécessaires. Elles détermineront si votre situation demande une intervention immédiate. Sinon, vous pourriez attendre ou être redirigé vers une autre ressource en santé.
+              </p>
+              <div class="text-center">
+                <p class="more-btn">  Avant de céer une demande d'urgence, nous vous recommandons  <i class="bx bx-chevron-right"></i></p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-8 d-flex align-items-stretch">
+            <div class="icon-boxes d-flex flex-column justify-content-center">
+              <div class="row">
+                <div class="col-xl-4 d-flex align-items-stretch">
+                  <div class="icon-box mt-4 mt-xl-0">
+                    <i class="bx bx-receipt"></i>
+                    <h4>d'appeler <a href="https://www.ciusss-capitalenationale.gouv.qc.ca/services/urgence/811/infosante" target="_blank"> Info-Santé</a> en composant le 811</h4>
+                    <p>Ce service est disponible 24 heures par jour, 7 jours par semaine</p>
+                  </div>
+                </div>
+                <div class="col-xl-4 d-flex align-items-stretch">
+                  <div class="icon-box mt-4 mt-xl-0">
+                    <i class="bx bx-cube-alt"></i>
+                    <h4>de consulter un médecin de famille </h4>
+                    <p><a href="https://www.rvsq.gouv.qc.ca/accueil/index.html?ReturnUrl=%2Ffr%2Faccueil" target="_blank"> 
+                      Rendez-vous santé Québec</a> Ce service est disponible à tous les détenteurs d’une carte d’assurance maladie avec ou sans médecin de famille. </p>
+                  </div>
+                </div>
+                <div class="col-xl-4 d-flex align-items-stretch">
+                  <div class="icon-box mt-4 mt-xl-0">
+                    <i class="bx bx-images"></i>
+                    <h4>de prendre un <a href="https://www.ciusss-capitalenationale.gouv.qc.ca/services/consultation-medecin-infirmiere/super-cliniques" target="_blank"> rendez-vous médical de dépannage</a></h4>
+                    <p>Vous n'avez pas de médecin de famille et vous avez besoin d'une consultation médicale? Vous pouvez 
+                      prendre un rendez-vous de dépannage dans une super-clinique (GMF accès-réseau).</p>
+                  </div>
+                </div>
+              </div>
+            </div><!-- End .content-->
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End Why Us Section -->
+  {{#unless user}}
+     <form align="center"  method="get" action="/inscription">
+              <div class="container-btn">
+               <button class="btn-urgence"><h3>Crée une urgence</h3> </button>
+               </div>
+              </form>
+              {{/unless}} 
+              
+     {{#if user}}
+     <form align="center"  method="get" action="/formulaire">
+              <div class="container-btn">
+               <button class="btn-urgence"><h3>Crée une urgence</h3> </button>
+               </div>
+              </form>
+
+     {{/if}}
+       
+   
+    <!-- ======= Counts Section ======= -->
+    <section id="counts" class="counts">
+      <div class="container">
+   <div class="section-title">
+        <h2 > Nombre d'urgences actuel </h2>
+      </div>
+
+        <div class="compteur-urgences">
+   
+            <div class="count-box">
+              <i class="far fa-hospital"></i>
+              <span data-purecounter-start="0" data-purecounter-end="142" data-purecounter-duration="1" class="purecounter"></span>
+              
+            </div>
+         
+
+        </div>
+
+      </div>
+    </section><!-- End Counts Section -->
+
+<script type="module" src="/js/home.js"></script>
