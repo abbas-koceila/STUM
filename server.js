@@ -103,6 +103,16 @@ app.get('/Admin', async (request, response) => {
         });
     //}
 });
+app.get('/modification', (request, response) => {
+    response.render('modification', {
+        styles: ['/css/Infirmier.css'],
+        styles: ['/css/style.css'],
+        scripts: ['/js/Admin.js'],
+        acceptCookie: request.session.accept,
+        user: request.user,
+        count: request.session.accept
+    });
+});
 app.get('/home', (request, response) => {
     response.render('home', {
         titre: 'home',
