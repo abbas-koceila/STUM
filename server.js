@@ -98,7 +98,7 @@ app.get('/Admin', async (request, response) => {
             scripts: ['/js/Admin.js'],
             acceptCookie: request.session.accept,
             user: request.user,
-            hike: await getHikes(),
+            admin :request.user.id_type_utilisateur == 2, 
 
         });
     //}

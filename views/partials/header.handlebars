@@ -18,9 +18,11 @@
             <a class="nav-link" href="/patient">Patient</a>
           </li>
              {{/if}}
+              {{#if admin}}
               <li class="nav-item">
-            <a class="nav-link" href="/Admin">amin</a>
+            <a class="nav-link" href="/Admin">Admin</a>
           </li>
+          {{/if}}
        
 
            {{#unless user}}
