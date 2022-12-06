@@ -48,37 +48,13 @@ app.use(express.static('public'));
 // Ajouter les routes ici ...
 app.get('/', async (request, response) => {
     if (request.user) {
-        let inscrit = await getInscription();
-        let hike_ids = [];
-
-        let data = [];
-        for (let i = 0; i < inscrit.length; i++) {
-            hike_ids.push(inscrit[i].id_hike);
-        }
-
-        let hikes = await getHikes();
-
-        hikes.forEach(hike => {
-            data.push({
-                id_hike: hike.id_hike,
-                nom: hike.nom,
-                description: hike.description,
-                capacite: hike.capacite,
-                date_debut: hike.date_debut,
-                nb_hike: hike.nb_hike,
-                inscription: hike_ids.includes(hike.id_hike),
-                checkInscription: hike.capacite > hike.nb_hike
-
-            });
-        })
         response.render('home', {
             title: 'home',
             styles: ['/css/style.css'],
             scripts: ['/js/home.js'],
             acceptCookie: request.session.accept,
             user: request.user,
-            admin :request.user.id_type_utilisateur == 2,
-            hike: data
+            admin :request.user.id_type_utilisateur == 2, 
         });
     }
     else {
@@ -108,16 +84,16 @@ app.delete('/', async (request, response) => {
 });
 
 app.get('/Admin', async (request, response) => {
-    if (!request.user) {
-        response.status(401).end();
-    }
-    else if (request.user.id_type_utilisateur != 2) {
-        response.status(403).end();
-    }
-    else {
-        response.render('Admin', {
-            title: 'Admin',
-            styles: ['/css/Admin.css'],
+    // if (!request.user) {
+    //     response.status(401).end();
+    // }
+    // else if (request.user.id_type_utilisateur != 2) {
+    //     response.status(403).end();
+    // }
+    // else {
+        response.render('index', {
+            title: 'index',
+            styles: ['/css/Infirmier.css'],
             styles: ['/css/style.css'],
             scripts: ['/js/Admin.js'],
             acceptCookie: request.session.accept,
@@ -125,7 +101,7 @@ app.get('/Admin', async (request, response) => {
             hike: await getHikes(),
 
         });
-    }
+    //}
 });
 app.get('/home', (request, response) => {
     response.render('home', {
