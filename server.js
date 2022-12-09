@@ -9,6 +9,7 @@ import compression from 'compression';
 import session from 'express-session';
 import memorystore from 'memorystore';
 import { getHikes, addHike, deleteHike, getInscription, getMyHikes, inscrireHike, desinscrireHike } from './model/hike.js';
+//import calculScore from './public/js/emergency_form';
 import cors from 'cors';
 import cspOption from './csp-options.js';
 import { validateForm } from './validations.js';
@@ -117,7 +118,7 @@ app.get('/home', (request, response) => {
     response.render('home', {
         titre: 'home',
         styles: ['/css/authentification.css', '/css/style.css'],
-    
+        scripts: ['/js/counter.js'],
         acceptCookie: request.session.accept,
         user: request.user,
         count: request.session.accept
@@ -244,6 +245,23 @@ app.post('/connexion', (request, response, next) => {
         response.status(400).end();
     }
 });
+
+app.post('/formulaire', async (req, res) => {
+
+    // Get the form data from the request body
+    const formData = req.body;
+  
+    // Select only the checked inputs from the form data
+    const selectedInputs = formData.filter(input => input.checked);
+  
+    // Calculate the total score
+    const totalScore = await calculScore(selectedInputs);
+    
+    console.log(totalScore);
+    // Send the total score back to the client
+    res.send({ totalScore });
+  });
+
 app.post('/deconnexion', (request, response, next) => {
     request.logOut((error) => {
         if (error) {
@@ -257,10 +275,10 @@ app.post('/deconnexion', (request, response, next) => {
 //AJOUT DE PHILLIPE 
 app.get('/formulaire',async (request, response) => {
     if (request.user) {
-    response.render('formulaire', {
-        title: 'Page d\'accueil',
+     response.render('formulaire', {
+        title: 'formulaire',
         styles: ['/css/style.css'], 
-        scripts: ['/js/formulaire.js'],
+        scripts: ['/js/emergency_form.js'],
         acceptCookie: request.session.accept,
         user: request.user,
         admin :request.user.id_type_utilisateur == 2,
