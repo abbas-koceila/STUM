@@ -131,7 +131,9 @@ app.get('/connexion', (request, response) => {
         scripts: ['/js/connexion.js'],
         acceptCookie: request.session.accept,
         user: request.user,
-        count: request.session.accept
+        count: request.session.accept,
+       
+    
     });
 });
 app.get('/inscription', (request, response) => {

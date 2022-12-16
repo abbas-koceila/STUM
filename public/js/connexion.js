@@ -1,3 +1,4 @@
+//import { getTypeAcces } from "../../model/utilisateur";
 let formAuth = document.getElementById('form-connexion');
 let inputNomUtilisateur = document.getElementById('input-nom-utilisateur');
 let inputMotDepasse = document.getElementById('input-mot-de-passe');
@@ -33,9 +34,10 @@ formAuth.addEventListener('submit', async (event) => {
         body: JSON.stringify(data)
     });
     if (response.ok) {
-        
-        window.location.replace('/patient');
-        console.log('connected ')
+        window.location.replace('/'); 
+
+    
+      
     } 
     else if (response.status === 401) {
         ///afficher erreur dans linterface graphic et suprimer le console.log
