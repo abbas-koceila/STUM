@@ -111,6 +111,18 @@ app.get('/modification', (request, response) => {
         scripts: ['/js/Admin.js'],
         acceptCookie: request.session.accept,
         user: request.user,
+        admin :request.user.id_type_utilisateur == 2, 
+        count: request.session.accept
+    });
+});
+app.get('/AjoutUrgence', (request, response) => {
+    response.render('AjoutUrgence', {
+        styles: ['/css/Infirmier.css'],
+        styles: ['/css/style.css'],
+        scripts: ['/js/Admin.js'],
+        acceptCookie: request.session.accept,
+        user: request.user,
+        admin :request.user.id_type_utilisateur == 2, 
         count: request.session.accept
     });
 });

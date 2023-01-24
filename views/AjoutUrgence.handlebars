@@ -1,0 +1,735 @@
+
+
+<form id="form-hike" novalidate>
+
+    <h3 class="titel-form"> Ajouter une Urgence</h3>
+
+    <div class="wrapper-form">
+      <!-- general form elements -->
+      <div class="card card-primary">
+        
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form>
+
+
+<label for="form-nom" class="formlabel">Nom *</label>
+    <input type="text" placeholder="Nom" class="form-control" id="form-nom" required>
+    <div id="error-nom" class="error"></div>
+
+
+    <label for="form-dateDebut" class="formlabel">Prenom *</label>
+    <input type="text" placeholder="Prenom" class="form-control" id="form-nom" required>
+    <div id="error-date" class="error"></div>
+
+    <label for="form-capacite" class="formlabel">Addresse Courriel *</label>
+    <input type="number" placeholder="Addresse Courriel" class="form-control" id="form-capacite" min="1" max="50" required>
+    <div id="error-capacity" class="error"></div>
+
+    <label for="form-capacite" class="formlabel">Numero de telephone *</label>
+    <input type="number" placeholder="Numero de telephone" class="form-control" id="form-capacite" min="1" max="50" required>
+    <div id="error-capacity" class="error"></div>
+
+    <label for="form-capacite" class="formlabel">Numero de carte sante *</label>
+    <input type="number" placeholder="Numero de carte sante" class="form-control" id="form-capacite" min="1" max="50" required>
+    <div id="error-capacity" class="error"></div>
+
+    <label for="form-capacite" class="formlabel">Addresse *</label>
+    <input type="number" placeholder="Addresse" class="form-control" id="form-capacite" min="1" max="50" required>
+    <div id="error-capacity" class="error"></div>
+
+
+          <!-- general form elements disabled -->
+          <div class="card card-warning">
+
+            <!-- /.card-header -->
+            <div class="card-body">
+              <form class="form-content">
+
+
+
+
+                <!-- textarea -->
+                <div class="form-group">
+                  <label> Quelle est la raison de votre demande d'urgence ?</label>
+                  <textarea class="form-control" rows="3" placeholder="Enter ..."></textarea>
+                </div>
+
+
+
+                <!-- text input -->
+                <div class="form-group">
+                  <label>Quand est-ce que cela a commencé / s'est produit ? </label>
+                  <input type="datetime-local" class="form-control" min="2022-11-08T00:00" max="2999-12-12T00:00"
+                    required>
+                </div>
+
+
+
+                <!-- text input -->
+                <div class="form-group">
+                  <label>quelle est la raison de votre demande d'urgence ?</label>
+                  <input type="text" class="form-control" placeholder="Enter ...">
+                </div>
+
+
+                <!-- textarea -->
+                <div class="form-group">
+                  <label> Quels symptômes ressentez-vous?</label>
+                  <textarea class="form-control" rows="3" placeholder="Enter ..."></textarea>
+                </div>
+
+
+
+
+
+                <!-- ***************************************input states
+                  <div class="form-group">
+                    <label class="col-form-label" for="inputSuccess"><i class="fas fa-check"></i> Input with
+                      success</label>
+                    <input type="text" class="form-control is-valid" id="inputSuccess" placeholder="Enter ...">
+                  </div>
+                  <div class="form-group">
+                    <label class="col-form-label" for="inputWarning"><i class="far fa-bell"></i> Input with
+                      warning</label>
+                    <input type="text" class="form-control is-warning" id="inputWarning" placeholder="Enter ...">
+                  </div>
+                  <div class="form-group">
+                    <label class="col-form-label" for="inputError"><i class="far fa-times-circle"></i> Input with
+                      error</label>
+                    <input type="text" class="form-control is-invalid" id="inputError" placeholder="Enter ...">
+                  </div> -->
+
+
+
+                <!-- debut form -->
+                <div class="form-group">
+                  <label> Avez-vous des conditions médicales préexistantes? </label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="radio1">
+                    <label class="form-check-label">Oui</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="radio1">
+                    <label class="form-check-label">Non</label>
+                  </div>
+
+                </div>
+
+                <div class="form-group">
+                  <label> Avez-vous été admis hôpital ou eu des interventions chirurgicales dans le passé?
+                  </label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="radio2">
+                    <label class="form-check-label">Oui</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="radio2">
+                    <label class="form-check-label">Non</label>
+                  </div>
+
+                </div>
+
+                <div class="form-group">
+                  <label> Prenez-vous des médicaments, des vitamines ou des suppléments?" </label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="radio3">
+                    <label class="form-check-label">Oui</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="radio3">
+                    <label class="form-check-label">Non</label>
+                  </div>
+
+                </div>
+
+
+                <!-- text input -->
+                <div class="form-group">
+                  <label>Quand avez-vous mangé ou bu pour la dernière fois? </label>
+                  <input type="datetime-local" class="form-control" min="2022-11-08T00:00" max="2999-12-12T00:00"
+                    required>
+                </div>
+
+                <div class="form-group">
+                  <label> Veuillez cocher les a partie du corps où vous ressentez une douleur
+                  </label>
+
+                  <!-- entete -->
+                  <div class="row">
+
+
+                    <label class="col-3"> Partie du corps </label>
+                    <label class="col-3"> Gauche </label>
+                    <label class="col-3"> Droite </label>
+
+                  </div>
+
+                  <!-- fin entete -->
+
+
+                  <!-- part corp -->
+                  <div class="row">
+                    <div class="col-3">
+                      <label> tête </label>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- fin part corp -->
+
+
+                  <!-- part corp -->
+                  <div class="row">
+                    <div class="col-3">
+                      <label> cou </label>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- fin part corp -->
+
+                  <!-- part corp -->
+                  <div class="row">
+                    <div class="col-3">
+                      <label> épaule </label>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- fin part corp -->
+
+                  <!-- part corp -->
+                  <div class="row">
+                    <div class="col-3">
+                      <label> poitrine </label>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- fin part corp -->
+
+                  <!-- part corp -->
+                  <div class="row">
+                    <div class="col-3">
+                      <label> coude </label>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- fin part corp -->
+
+                  <!-- part corp -->
+                  <div class="row">
+                    <div class="col-3">
+                      <label> main et poignet </label>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- fin part corp -->
+
+                  <!-- part corp -->
+                  <div class="row">
+                    <div class="col-3">
+                      <label> hanche </label>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- fin part corp -->
+
+                  <!-- part corp -->
+                  <div class="row">
+                    <div class="col-3">
+                      <label> cuisse </label>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- part corp -->
+                  <div class="row">
+                    <div class="col-3">
+                      <label> genau </label>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- part corp -->
+                  <div class="row">
+                    <div class="col-3">
+                      <label> jambe </label>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- part corp -->
+                  <div class="row">
+                    <div class="col-3">
+                      <label> pied </label>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox">
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- fin part corp -->
+
+
+
+                </div>
+
+
+                <div class="range-douleurs ">
+                  <label></label>
+                  <label> Le chiffre 0 correspond à « pas de douleur », le chiffre 10 correspond à la « douleur
+                    maximale imaginable : </label>
+
+                  <label></label>
+
+                  <!-- debut range -->
+                  <div class="form-groupe ">
+                    <label class="font-weight-normal">Douleur au moment présent : </label>
+
+                    <div class="row   ">
+                      <div class="col form-check ">
+
+                        <input class="form-check-input " type="radio" name="radio4">
+                        <label class="form-check-label ">0</label>
+
+                      </div>
+
+                      <div class="col form-check ">
+
+                        <input class="form-check-input" type="radio" name="radio4">
+                        <label class="form-check-label">1</label>
+
+                      </div>
+
+                      <div class="col ">
+
+                        <input class="form-check-input" type="radio" name="radio4">
+                        <label class="form-check-label">2</label>
+
+                      </div>
+
+                      <div class="col ">
+
+                        <input class="form-check-input" type="radio" name="radio4">
+                        <label class="form-check-label">3</label>
+
+                      </div>
+
+                      <div class="col ">
+
+                        <input class="form-check-input" type="radio" name="radio4">
+                        <label class="form-check-label">4</label>
+
+                      </div>
+
+                      <div class="col ">
+
+                        <input class="form-check-input" type="radio" name="radio4">
+                        <label class="form-check-label">5</label>
+
+                      </div>
+                      <div class="col ">
+
+                        <input class="form-check-input" type="radio" name="radio4">
+                        <label class="form-check-label">6</label>
+
+                      </div>
+
+                      <div class="col ">
+
+                        <input class="form-check-input" type="radio" name="radio4">
+                        <label class="form-check-label">7</label>
+
+                      </div>
+
+                      <div class="col ">
+
+                        <input class="form-check-input" type="radio" name="radio4">
+                        <label class="form-check-label">8</label>
+
+                      </div>
+
+                      <div class="col ">
+
+                        <input class="form-check-input" type="radio" name="radio4">
+                        <label class="form-check-label">9</label>
+
+                      </div>
+
+                      <div class="col ">
+
+                        <input class="form-check-input" type="radio" name="radio4">
+                        <label class="form-check-label">10</label>
+
+                      </div>
+
+                    </div>
+
+                    <!-- fin range -->
+                    <label></label>
+
+                    <!-- debut range -->
+                    <div class="form-group">
+                      <label class="font-weight-normal">Douleur habituelle depuis les 8 derniers jours : </label>
+
+                      <div class="row ">
+                        <div class=" col form-check ">
+
+                          <input class="form-check-input" type="radio" name="radio5">
+                          <label class="form-check-label">0</label>
+
+                        </div>
+
+                        <div class="col ">
+
+                          <input class="form-check-input" type="radio" name="radio5">
+                          <label class="form-check-label">1</label>
+
+                        </div>
+
+                        <div class="col ">
+
+                          <input class="form-check-input" type="radio" name="radio5">
+                          <label class="form-check-label">2</label>
+
+                        </div>
+
+                        <div class="col ">
+
+                          <input class="form-check-input" type="radio" name="radio5">
+                          <label class="form-check-label">3</label>
+
+                        </div>
+
+                        <div class="col ">
+
+                          <input class="form-check-input" type="radio" name="radio5">
+                          <label class="form-check-label">4</label>
+
+                        </div>
+
+                        <div class="col ">
+
+                          <input class="form-check-input" type="radio" name="radio5">
+                          <label class="form-check-label">5</label>
+
+                        </div>
+                        <div class="col ">
+
+                          <input class="form-check-input" type="radio" name="radio5">
+                          <label class="form-check-label">6</label>
+
+                        </div>
+
+                        <div class="col ">
+
+                          <input class="form-check-input" type="radio" name="radio5">
+                          <label class="form-check-label">7</label>
+
+                        </div>
+
+                        <div class="col ">
+
+                          <input class="form-check-input" type="radio" name="radio5">
+                          <label class="form-check-label">8</label>
+
+                        </div>
+
+                        <div class="col ">
+
+                          <input class="form-check-input" type="radio" name="radio5">
+                          <label class="form-check-label">9</label>
+
+                        </div>
+
+                        <div class="col ">
+
+                          <input class="form-check-input" type="radio" name="radio5">
+                          <label class="form-check-label">10</label>
+
+                        </div>
+
+                      </div>
+
+                      <!-- fin range -->
+                      <label></label>
+
+                      <!-- debut range -->
+                      <div class="form-group ">
+                        <label class="font-weight-normal"> Douleur la plus intense depuis les 8 derniers jours: </label>
+
+                        <div class="row ">
+                          <div class="col form-check  ">
+
+                            <input class="form-check-input" type="radio" name="radio6">
+                            <label class="form-check-label">0</label>
+
+                          </div>
+
+                          <div class="col ">
+
+                            <input class="form-check-input" type="radio" name="radio6">
+                            <label class="form-check-label">1</label>
+
+                          </div>
+
+                          <div class="col ">
+
+                            <input class="form-check-input" type="radio" name="radio6">
+                            <label class="form-check-label">2</label>
+
+                          </div>
+
+                          <div class="col ">
+
+                            <input class="form-check-input" type="radio" name="radio6">
+                            <label class="form-check-label">3</label>
+
+                          </div>
+
+                          <div class="col ">
+
+                            <input class="form-check-input" type="radio" name="radio6">
+                            <label class="form-check-label">4</label>
+
+                          </div>
+
+                          <div class="col ">
+
+                            <input class="form-check-input" type="radio" name="radio6">
+                            <label class="form-check-label">5</label>
+
+                          </div>
+                          <div class="col ">
+
+                            <input class="form-check-input" type="radio" name="radio6">
+                            <label class="form-check-label">6</label>
+
+                          </div>
+
+                          <div class="col ">
+
+                            <input class="form-check-input" type="radio" name="radio6">
+                            <label class="form-check-label">7</label>
+
+                          </div>
+
+                          <div class="col ">
+
+                            <input class="form-check-input" type="radio" name="radio6">
+                            <label class="form-check-label">8</label>
+
+                          </div>
+
+                          <div class="col ">
+
+                            <input class="form-check-input" type="radio" name="radio6">
+                            <label class="form-check-label">9</label>
+
+                          </div>
+
+                          <div class="col ">
+
+                            <input class="form-check-input" type="radio" name="radio6">
+                            <label class="form-check-label">10</label>
+
+                          </div>
+
+                        </div>
+
+                        <!-- fin range -->
+
+
+
+                        <label> </label>
+                        <div class="btnform">
+                          <button type="submit" class="btn btn-primary " id="add-submit"> Sauvgarder</button>
+                        </div>
+
+
+
+
+                      </div>
+
+
+                    </div>
+
+
+
+
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!--/.col (right) -->
+          </div>
+          <!-- /.row -->
+      </div><!-- /.container-fluid -->
+
+
+
+    </div>
+
+  </form>
+
+
+<script type="module" src="/js/home.js"></script>
+     
