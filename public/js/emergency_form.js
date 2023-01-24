@@ -14,7 +14,7 @@ function calculScore(inputs) {
 console.log(formUrgence);
 formUrgence.addEventListener('submit', async (event) => {
     event.preventDefault();
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     
     
     

@@ -64,26 +64,6 @@ app.get('/', async (request, response) => {
 });
 
 
-app.post('/', async (request, response) => {
-    if(!request.user) {
-        response.status(401).end();
-    }
-    else {
-        // JE VIENS D'AJOUTER SA ET SA MARCHE PAS request.body.id_utilisateur
-    let id = await inscrireHike(request.body.id,request.body.id_utilisateur);
-    response.status(201).json({ id: id });
-    }
-});
-app.delete('/', async (request, response) => {
-    if(!request.user) {
-        response.status(401).end();
-    }
-    else {
-    let id = await desinscrireHike(request.body.id);
-    response.status(201).json({ id: id });
-    }
-});
-
 app.get('/Admin', async (request, response) => {
     // if (!request.user) {
     //     response.status(401).end();
@@ -145,38 +125,8 @@ app.get('/inscription', (request, response) => {
         acceptCookie: request.session.accept
     });
 });
-app.post('/Admin', async (request, response) => {
-    if (!request.user) {
-        response.status(401).end();
-    }
-    else if (request.user.id_type_utilisateur != 2) {
-        response.status(403).end();
-    }
-    else {
-    if (!validateForm(request.body)) {
-        let id = await addHike(request.body.nom, request.body.date_debut, request.body.capacite, request.body.description);
-        response.status(201).json({ id: id });
-    }
 
-    else {
-        console.log(request.body);
-        response.status(400).end();
-    }
-    }
-});
-app.delete('/Admin', async (request, response) => {
-    if (!request.user) {
-        response.status(401).end();
-    }
-    else if (request.user.id_type_utilisateur != 2) {
-        response.status(403).end();
-    }
-    else {
 
-    await deleteHike(request.body.id);
-    response.status(200).end();
-    }
-});
 app.get('/patient', async (request, response) => {
      if (request.user) {
     response.render('patient', {
@@ -247,6 +197,8 @@ app.post('/connexion', (request, response, next) => {
         response.status(400).end();
     }
 });
+
+// pas encore fonctionelle .
 
 app.post('/formulaire', async (req, res) => {
 
