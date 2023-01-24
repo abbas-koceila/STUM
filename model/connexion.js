@@ -100,5 +100,5 @@ export let promesseConnexion = open({
 // et on y insère des données fictive de test.
 if (IS_NEW) {
     promesseConnexion = createDatabase(promesseConnexion);
-}
+} 
 

@@ -29,8 +29,6 @@ const validateDate = (date_debut) => {
 
 
 
-
-
  //validation de la description pour que elle soit <=2000 carc  et >=10
 
  const validateDescription = (Description) => {
