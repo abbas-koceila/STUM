@@ -8,8 +8,7 @@ export const getHikes = async () => {
     let resultat = await connexion.all('SELECT * FROM hike');
     for (let i = 0; i < resultat.length; i++) {
         let date=new Date(resultat[i].date_debut);
-       
-      
+ 
         resultat[i].date_debut=  date.toDateString()+", "+date.getHours() + ":" + date.getMinutes();
     }
 

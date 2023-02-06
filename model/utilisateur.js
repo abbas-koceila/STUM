@@ -27,3 +27,13 @@ export const getUtilisateurByNom=async (nomUtilisateur)=>{
     );
     return utilisateur;
 }
+export const getTypeAcces=async (nomUtilisateur)=>{
+    let connexion = await promesseConnexion;
+
+   let Typeutilisateur= await  connexion.get(
+        `id_type_utilisateur FROM utilisateur 
+        WHERE nom_utilisateur= ?`,
+        [nomUtilisateur]
+    );
+    return Typeutilisateur;
+}
