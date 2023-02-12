@@ -73,6 +73,10 @@ const createDatabase = async (connectionPromise) => {
         // INSERT INTO type_utilisateur (type) VALUES 
         //     ('regulier'),
         //     ('administrateur');
+<<<<<<< HEAD
+=======
+
+>>>>>>> c3ca6b929312c47770fe718cae47c7467a0e1447
         // INSERT INTO utilisateur (id_type_utilisateur, courriel, mot_passe, prenom, nom) VALUES 
         //     (2, 'admin@admin.com', 'admin', 'Admin', 'Admin'),
         //     (1, 'john_doe@gmail.com', 'passw0rd', 'John', 'Doe'),
