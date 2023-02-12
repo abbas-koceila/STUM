@@ -9,6 +9,7 @@ import compression from 'compression';
 import session from 'express-session';
 import memorystore from 'memorystore';
 import { getHikes, addHike, deleteHike, getInscription, getMyHikes, inscrireHike, desinscrireHike } from './model/hike.js';
+//import calculScore from './public/js/emergency_form';
 import cors from 'cors';
 import cspOption from './csp-options.js';
 import { validateForm } from './validations.js';
@@ -48,37 +49,13 @@ app.use(express.static('public'));
 // Ajouter les routes ici ...
 app.get('/', async (request, response) => {
     if (request.user) {
-        let inscrit = await getInscription();
-        let hike_ids = [];
-
-        let data = [];
-        for (let i = 0; i < inscrit.length; i++) {
-            hike_ids.push(inscrit[i].id_hike);
-        }
-
-        let hikes = await getHikes();
-
-        hikes.forEach(hike => {
-            data.push({
-                id_hike: hike.id_hike,
-                nom: hike.nom,
-                description: hike.description,
-                capacite: hike.capacite,
-                date_debut: hike.date_debut,
-                nb_hike: hike.nb_hike,
-                inscription: hike_ids.includes(hike.id_hike),
-                checkInscription: hike.capacite > hike.nb_hike
-
-            });
-        })
         response.render('home', {
             title: 'home',
             styles: ['/css/style.css'],
             scripts: ['/js/home.js'],
             acceptCookie: request.session.accept,
             user: request.user,
-            admin :request.user.id_type_utilisateur == 2,
-            hike: data
+            admin :request.user.id_type_utilisateur == 2, 
         });
     }
     else {
@@ -87,51 +64,41 @@ app.get('/', async (request, response) => {
 });
 
 
-app.post('/', async (request, response) => {
-    if(!request.user) {
-        response.status(401).end();
-    }
-    else {
-        // JE VIENS D'AJOUTER SA ET SA MARCHE PAS request.body.id_utilisateur
-    let id = await inscrireHike(request.body.id,request.body.id_utilisateur);
-    response.status(201).json({ id: id });
-    }
-});
-app.delete('/', async (request, response) => {
-    if(!request.user) {
-        response.status(401).end();
-    }
-    else {
-    let id = await desinscrireHike(request.body.id);
-    response.status(201).json({ id: id });
-    }
-});
-
 app.get('/Admin', async (request, response) => {
-    if (!request.user) {
-        response.status(401).end();
-    }
-    else if (request.user.id_type_utilisateur != 2) {
-        response.status(403).end();
-    }
-    else {
-        response.render('Admin', {
-            title: 'Admin',
-            styles: ['/css/Admin.css'],
+    // if (!request.user) {
+    //     response.status(401).end();
+    // }
+    // else if (request.user.id_type_utilisateur != 2) {
+    //     response.status(403).end();
+    // }
+    // else {
+        response.render('index', {
+            title: 'index',
+            styles: ['/css/Infirmier.css'],
             styles: ['/css/style.css'],
             scripts: ['/js/Admin.js'],
             acceptCookie: request.session.accept,
             user: request.user,
-            hike: await getHikes(),
+            admin :request.user.id_type_utilisateur == 2, 
 
         });
-    }
+    //}
+});
+app.get('/modification', (request, response) => {
+    response.render('modification', {
+        styles: ['/css/Infirmier.css'],
+        styles: ['/css/style.css'],
+        scripts: ['/js/Admin.js'],
+        acceptCookie: request.session.accept,
+        user: request.user,
+        count: request.session.accept
+    });
 });
 app.get('/home', (request, response) => {
     response.render('home', {
         titre: 'home',
         styles: ['/css/authentification.css', '/css/style.css'],
-    
+        scripts: ['/js/counter.js'],
         acceptCookie: request.session.accept,
         user: request.user,
         count: request.session.accept
@@ -144,7 +111,9 @@ app.get('/connexion', (request, response) => {
         scripts: ['/js/connexion.js'],
         acceptCookie: request.session.accept,
         user: request.user,
-        count: request.session.accept
+        count: request.session.accept,
+       
+    
     });
 });
 app.get('/inscription', (request, response) => {
@@ -156,38 +125,8 @@ app.get('/inscription', (request, response) => {
         acceptCookie: request.session.accept
     });
 });
-app.post('/Admin', async (request, response) => {
-    if (!request.user) {
-        response.status(401).end();
-    }
-    else if (request.user.id_type_utilisateur != 2) {
-        response.status(403).end();
-    }
-    else {
-    if (!validateForm(request.body)) {
-        let id = await addHike(request.body.nom, request.body.date_debut, request.body.capacite, request.body.description);
-        response.status(201).json({ id: id });
-    }
 
-    else {
-        console.log(request.body);
-        response.status(400).end();
-    }
-    }
-});
-app.delete('/Admin', async (request, response) => {
-    if (!request.user) {
-        response.status(401).end();
-    }
-    else if (request.user.id_type_utilisateur != 2) {
-        response.status(403).end();
-    }
-    else {
 
-    await deleteHike(request.body.id);
-    response.status(200).end();
-    }
-});
 app.get('/patient', async (request, response) => {
      if (request.user) {
     response.render('patient', {
@@ -258,6 +197,25 @@ app.post('/connexion', (request, response, next) => {
         response.status(400).end();
     }
 });
+
+// pas encore fonctionelle .
+
+app.post('/formulaire', async (req, res) => {
+
+    // Get the form data from the request body
+    const formData = req.body;
+  
+    // Select only the checked inputs from the form data
+    const selectedInputs = formData.filter(input => input.checked);
+  
+    // Calculate the total score
+    const totalScore = await calculScore(selectedInputs);
+    
+    console.log(totalScore);
+    // Send the total score back to the client
+    res.send({ totalScore });
+  });
+
 app.post('/deconnexion', (request, response, next) => {
     request.logOut((error) => {
         if (error) {
@@ -271,10 +229,10 @@ app.post('/deconnexion', (request, response, next) => {
 //AJOUT DE PHILLIPE 
 app.get('/formulaire',async (request, response) => {
     if (request.user) {
-    response.render('formulaire', {
-        title: 'Page d\'accueil',
+     response.render('formulaire', {
+        title: 'formulaire',
         styles: ['/css/style.css'], 
-        scripts: ['/js/formulaire.js'],
+        scripts: ['/js/emergency_form.js'],
         acceptCookie: request.session.accept,
         user: request.user,
         admin :request.user.id_type_utilisateur == 2,
