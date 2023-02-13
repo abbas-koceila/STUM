@@ -64,10 +64,7 @@ export const inscrireHike =async(id)=>{
      console.log('hello');
      let Cap=await connexion.run( `SELECT capacite FROM hike WHERE id_hike=?`,[id]);
      let nbHike=await connexion.run( `SELECT nb_hike FROM hike WHERE id_hike=?`,[id]);
-
-         
-
-
+     
          if (Cap>=nbHike){
          
      await connexion.run(
@@ -88,7 +85,7 @@ export const inscrireHike =async(id)=>{
      let connexion = await promesseConnexion;
     
       await connexion.run(
-         `DELETE FROM   hike_utilisateur WHERE id_hike = ? `,
+         `DELETE FROM hike_utilisateur WHERE id_hike = ? `,
          [id]
      );
      await connexion.run(

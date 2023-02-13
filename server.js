@@ -9,6 +9,7 @@ import compression from 'compression';
 import session from 'express-session';
 import memorystore from 'memorystore';
 import { getHikes, addHike, deleteHike, getInscription, getMyHikes, inscrireHike, desinscrireHike } from './model/hike.js';
+import { getUrgences, addUrgence, deleteUrgence } from './model/stum.js';
 //import calculScore from './public/js/emergency_form';
 import cors from 'cors';
 import cspOption from './csp-options.js';
@@ -16,7 +17,7 @@ import { validateForm } from './validations.js';
 import passport from 'passport';
 import middlewareSse from './middleware-sse.js';
 import './authentification.js'
-import { addUtilisateur } from './model/utilisateur.js';
+import { addPatient } from './model/utilisateur.js';
 
 // Création de la base de données de session
 const MemoryStore = memorystore(session);
@@ -140,7 +141,6 @@ app.get('/patient', async (request, response) => {
 
 
     });
-    console.log(request.user)
 }
     else {
         response.redirect('/Connexion');
@@ -156,7 +156,7 @@ app.post('/inscription', async (request, response, next) => {
 
     if (true) {
         try {
-            await addUtilisateur(request.body.nomUtilisateur, request.body.motDePasse, request.body.courriel, request.body.nom, request.body.prenom);
+            await addPatient(request.body.nomUtilisateur, request.body.nom, request.body.prenom, request.body.courriel, request.body.motDePasse, request.body.numeroCarteSante, request.body.numeroTel);
             response.status(200).end();
         }
         catch (error) {
@@ -236,9 +236,6 @@ app.get('/formulaire',async (request, response) => {
         acceptCookie: request.session.accept,
         user: request.user,
         admin :request.user.id_type_utilisateur == 2,
-    
-       
-        
     });
 }
 else {
@@ -254,8 +251,6 @@ app.get('/changeInfo',async (request, response) => {
         acceptCookie: request.session.accept,
         user: request.user,
         admin :request.user.id_type_utilisateur == 2,
-       
-        
     });
 });
 
@@ -267,8 +262,6 @@ app.get('/annuler',async (request, response) => {
         acceptCookie: request.session.accept,
         user: request.user,
         admin :request.user.id_type_utilisateur == 2,
-       
-        
     });
 });
 
@@ -280,8 +273,6 @@ app.get('/rdvPasse',async (request, response) => {
            acceptCookie: request.session.accept,
         user: request.user,
         admin :request.user.id_type_utilisateur == 2,
-       
-        
     });
 });
 
@@ -293,8 +284,6 @@ app.get('/rdvFutur',async (request, response) => {
         acceptCookie: request.session.accept,
         user: request.user,
         admin :request.user.id_type_utilisateur == 2,
-       
-        
     });
 });
 
