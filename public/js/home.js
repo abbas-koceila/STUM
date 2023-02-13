@@ -57,5 +57,3 @@ for (let supButton of cardButtons) {
 */
 
 
-
-

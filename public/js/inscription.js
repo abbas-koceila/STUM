@@ -6,7 +6,6 @@ let inputCourriel = document.getElementById('form-courriel');
 let inputNomUtilisateur = document.getElementById('form-nomUtilisateur');
 let inputPhone = document.getElementById('form-telephone');
 let inputCarte = document.getElementById('form-carte');
-let inputAddresse = document.getElementById('form-addresse');
 let inputMotDepasse = document.getElementById('input-mot-de-passe');
 
 formAuth.addEventListener('submit', async (event) => {
@@ -17,7 +16,9 @@ formAuth.addEventListener('submit', async (event) => {
         motDePasse: inputMotDepasse.value,
         courriel: inputCourriel.value,
         nom: inputNom.value,
-        prenom: inputPrenom.value
+        prenom: inputPrenom.value,
+        numeroCarteSante: inputCarte.value,
+        numeroTel: inputPhone.value
 
         // ajouter phone carte adresse 
     }

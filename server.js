@@ -16,7 +16,7 @@ import { validateForm } from './validations.js';
 import passport from 'passport';
 import middlewareSse from './middleware-sse.js';
 import './authentification.js'
-import { addUtilisateur } from './model/utilisateur.js';
+import { addPatient } from './model/utilisateur.js';
 
 // Création de la base de données de session
 const MemoryStore = memorystore(session);
@@ -156,7 +156,7 @@ app.post('/inscription', async (request, response, next) => {
 
     if (true) {
         try {
-            await addUtilisateur(request.body.nomUtilisateur, request.body.motDePasse, request.body.courriel, request.body.nom, request.body.prenom);
+            await addPatient(request.body.nomUtilisateur, request.body.nom, request.body.prenom, request.body.courriel, request.body.motDePasse, request.body.numeroCarteSante, request.body.numeroTel);
             response.status(200).end();
         }
         catch (error) {
