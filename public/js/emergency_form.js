@@ -1,4 +1,3 @@
-
 let formUrgence = document.getElementById('emergency_form');
 let btnSubmit = document.getElementById('add-submit');
 
@@ -15,10 +14,6 @@ console.log(formUrgence);
 formUrgence.addEventListener('submit', async (event) => {
     event.preventDefault();
     console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    
-    
-    
-
 
     var selectedInputs = document.querySelectorAll('input[type="checkbox"]:checked, input[type="radio"]:checked');
 

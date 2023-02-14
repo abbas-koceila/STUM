@@ -44,6 +44,7 @@ export const getUtilisateurByNom=async (nomUtilisateur)=>{
     );
     return utilisateur;
 }
+
 export const getTypeAcces=async (nomUtilisateur)=>{
     let connexion = await promesseConnexion;
 
@@ -53,4 +54,27 @@ export const getTypeAcces=async (nomUtilisateur)=>{
         [nomUtilisateur]
     );
     return Typeutilisateur;
+}
+
+export const updateUtilisateur = async (nomUtilisateur, nom, prenom, courriel, idUtilisateur) => {
+    let connexion = await promesseConnexion;
+
+    await connexion.run(
+        `UPDATE utilisateur SET (nom_utilisateur, nom, prenom, courriel, mot_passe) VALUES(?,?,?,?,?,?) WHERE id_utilisateur = ?`,
+        [nomUtilisateur, nom, prenom, courriel, motDePasseHach],
+        [idUtilisateur]
+    )
+}
+
+export const updatePatient = async (nomUtilisateur, nom, prenom, courriel, numeroCarteSante, numeroTel) => {
+    let connexion = await promesseConnexion;
+
+    let idUtilisateur = getUserId();
+
+    updateUtilisateur(nomUtilisateur, nom, prenom, courriel, idUtilisateur)
+
+    await connexion.run(
+        `UPDATE patient SET (id_utilisateur, numero_carte_sante, numero_tel) WHERE id_utilisateur = ?`, 
+        [userId, numeroCarteSante, numeroTel], [idUtilisateur]
+    );
 }
