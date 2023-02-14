@@ -1,7 +1,7 @@
 import { promesseConnexion } from "./connexion.js";
 import { hash } from "bcrypt";
 
-const getUserId = async (courriel) => {
+export const getUserId = async (courriel) => {
     let connexion = await promesseConnexion;
 
     let newId = await connexion.run( `SELECT id_utilisateur FROM utilisateur WHERE courriel=?`,[courriel]);
