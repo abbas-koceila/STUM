@@ -58,18 +58,38 @@ const createDatabase = async (connectionPromise) => {
         );
 
         CREATE TABLE IF NOT EXISTS urgence(
-            id_utilisateur INTEGER NOT NULL,
+            id_utilisateur INTEGER NOT NULL UNIQUE,
             id_urgence INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_rendez_vous INTEGER,
             niveau_urgence INTEGER NOT NULL,
             points_urgence INTEGER NOT NULL,
             date_urgence DATE,
             etat_urgence BIT NOT NULL,
+            
+            CONSTRAINT fk_id_utilisateur
+                FOREIGN KEY (id_utilisateur)
+                REFERENCES utilisateur(id_utilisateur)
+                ON DELETE SET NULL
+                ON UPDATE CASCADE
+
+            CONSTRAINT fk_id_rendez_vous
+            FOREIGN KEY (id_rendez_vous)
+            REFERENCES rendez_vous(id_rendez_vous)
+            ON DELETE SET NULL
+            ON UPDATE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS rendez_vous(
+            id_rendez_vous INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_utilisateur INTEGER NOT NULL,
+            date_rendez_vous DATE NOT NULL,
             CONSTRAINT fk_id_utilisateur
                 FOREIGN KEY (id_utilisateur)
                 REFERENCES utilisateur(id_utilisateur)
                 ON DELETE SET NULL
                 ON UPDATE CASCADE
         );
+
         
         INSERT INTO type_utilisateur (type) VALUES 
             ('regulier'),
@@ -101,5 +121,5 @@ export let promesseConnexion = open({
 // et on y insère des données fictive de test.
 if (IS_NEW) {
     promesseConnexion = createDatabase(promesseConnexion);
-} 
+}
 

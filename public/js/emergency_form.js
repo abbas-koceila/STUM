@@ -2,6 +2,8 @@
 let formUrgence = document.getElementById('emergency_form');
 let btnSubmit = document.getElementById('add-submit');
 
+
+
 // submit form 
 
 formUrgence.addEventListener('submit', async (event) => {
@@ -22,9 +24,12 @@ formUrgence.addEventListener('submit', async (event) => {
 
   if (response.ok) {
     console.log('l urgence est ajoute');
+    alert('l urgence est ajoute avec succes');
+
   } else if (response.status === 409) {
 
       console.log('non ajoute');
+      window.alert('Vous avez déjà créé une demande d\'urgence. Vous ne pouvez pas en créer une autre.');
   }
 
 
