@@ -205,7 +205,7 @@ app.post('/connexion', (request, response, next) => {
     }
 });
 
-// pas encore fonctionelle .
+
 
 app.post('/addUrgence', async (req, res) => {
 
@@ -216,6 +216,7 @@ app.post('/addUrgence', async (req, res) => {
    
 
     let point_urgence = await calculScore(data);
+    console.log(point_urgence);
     let niveau_urgence = await calculNiveauUrgence(point_urgence);
 
     try {

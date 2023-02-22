@@ -14,8 +14,6 @@ export const getUrgences = async () => {
 export const addUrgence = async (niveauUrgence, pointsUrgence,id_utilisateur) => {
     
     let connexion = await promesseConnexion;
- 
-  //  let userId = await getUserId(courriel);
     let dateUrgence = new Date(Date.now());
  
 
