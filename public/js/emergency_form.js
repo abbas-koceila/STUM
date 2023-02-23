@@ -34,14 +34,14 @@ formUrgence.addEventListener('submit', async (event) => {
 
 
 
-    // console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     
 
-    //  var totalScore = calculScore(selectedInputs);
+     var totalScore = calculScore(selectedInputs);
 
 
-    //  console.log(totalScore);
-    //  console.log("le niveau d'urgence est  ",calculNiveauUrgence(totalScore));
+     console.log(totalScore);
+     console.log("le niveau d'urgence est  ",calculNiveauUrgence(totalScore));
 
 
 
