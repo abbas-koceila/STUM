@@ -48,6 +48,8 @@ export const updateRDVuser = async () => {
        [DATENOW]
   );
   console.log(rdvs) ;
+
+
   let urgences = await connexion.all(
         
     `SELECT id_urgence,id_utilisateur, points_urgence 
@@ -55,22 +57,19 @@ export const updateRDVuser = async () => {
        where etat_urgence =1
        ORDER BY points_urgence DESC`
   );
+
+
   console.log(urgences);
+  console.log('rdvs lenghth',rdvs.length);
+  console.log('urgences length',urgences.length);
 
 
-  if (rdvs.length > 0 ) {
+  if ( rdvs && rdvs.length > 0 ) {
     for (let i = 0; i < utilisateurs.length; i++) {
-      // let rdv = rdvs[i];
-      // let urgence = urgences[i];
-
-      // await connexion.run(
-      //   `UPDATE rendez_vous SET date_rendez_vous = ? WHERE id_utilisateur = ?`,
-      //   [rdv.date_rendez_vous, urgence.id_utilisateur]
-   
 
       await connexion.run(
         `UPDATE rendez_vous SET date_rendez_vous = ? WHERE id_utilisateur = ?`,
-        [rdvs[i].date_rendez_vous, urgences[i].id_utilisateur]
+        [rdvs[i]?.date_rendez_vous, urgences[i]?.id_utilisateur]
       );
     }
   }
@@ -115,6 +114,7 @@ export const assignRdv = async (id_utilisateur) => {
 
 
 export const addUrgence = async (niveauUrgence, pointsUrgence, id_utilisateur) => {
+  await updateEtatUrgence();
 
   let connexion = await promesseConnexion;
   let dateUrgence = new Date(Date.now());
