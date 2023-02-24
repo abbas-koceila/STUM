@@ -57,18 +57,22 @@ export const updateRDVuser = async () => {
   );
   console.log(urgences);
 
-  for (let i = 0; i < utilisateurs.length; i++) {
-    let rdv = rdvs[i];
-    let urgence = urgences[i];
 
-   if(rdvs.length >0){
-    await connexion.run(
-      `UPDATE rendez_vous SET date_rendez_vous = ? WHERE id_utilisateur = ?`,
-      [rdv.date_rendez_vous, urgence.id_utilisateur]
-    );
-   }
+  if (rdvs.length > 0 ) {
+    for (let i = 0; i < utilisateurs.length; i++) {
+      // let rdv = rdvs[i];
+      // let urgence = urgences[i];
 
+      // await connexion.run(
+      //   `UPDATE rendez_vous SET date_rendez_vous = ? WHERE id_utilisateur = ?`,
+      //   [rdv.date_rendez_vous, urgence.id_utilisateur]
+   
 
+      await connexion.run(
+        `UPDATE rendez_vous SET date_rendez_vous = ? WHERE id_utilisateur = ?`,
+        [rdvs[i].date_rendez_vous, urgences[i].id_utilisateur]
+      );
+    }
   }
 };
 
@@ -101,7 +105,7 @@ export const assignRdv = async (id_utilisateur) => {
 
 
    await updateRDVuser();
-   
+
 }
 
 
