@@ -51,6 +51,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(urlencoded({ extended: false }));
 app.use(express.static('public'));
+app.use(express.json());
 
 
 // Ajouter les routes ici ...
