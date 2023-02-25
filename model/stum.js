@@ -84,16 +84,25 @@ export const assignRdv = async (id_utilisateur) => {
  
   );
 
-  console.log("last rdv est ",lastRdv.last_rdv_date)
+  console.log("wagiiii last rdv est ",lastRdv.last_rdv_date)
 
   let newRdvDate;
   //si le rdv il n<existe pas ou le dernier rdv date de plus de 10 minutes en arriere 
   //pour pouvoir donner au patient le temps de se rendre a l hopital 
   if (lastRdv.last_rdv_date == null || (Date.now() - new Date(lastRdv.last_rdv_date) > 10 * 60 * 1000) ) {
     newRdvDate = new Date(Date.now() + 30 * 60 * 1000);
+
+    
+
+    console.log('ichem a if ');
+    console.log('new rdv n if',newRdvDate);
   } else {
+
+ 
     newRdvDate = new Date(lastRdv.last_rdv_date);
     newRdvDate.setMinutes(newRdvDate.getMinutes() + 30);
+    console.log('ichem a else ')
+    console.log('new rdv n else',newRdvDate);
   }
 
   await connexion.run(
