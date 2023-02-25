@@ -22,14 +22,14 @@ const createDatabase = async (connectionPromise) => {
         );
 
         CREATE TABLE IF NOT EXISTS utilisateur(
-            id_utilisateur INTEGER IDENTITY(1,1),
+            id_utilisateur INTEGER PRIMARY KEY AUTOINCREMENT,
             id_type_utilisateur INTEGER NOT NULL,
             nom_utilisateur TEXT NOT NULL UNIQUE,
+            nom TEXT NOT NULL,
+            prenom TEXT NOT NULL,
             courriel TEXT NOT NULL UNIQUE,
             mot_passe TEXT NOT NULL,
-            prenom TEXT NOT NULL,
-            nom TEXT NOT NULL,
-            PRIMARY KEY(id_utilisateur),
+            date_ajout DATE,
             CONSTRAINT fk_type_utilisateur 
                 FOREIGN KEY (id_type_utilisateur)
                 REFERENCES type_utilisateur(id_type_utilisateur) 
@@ -39,7 +39,7 @@ const createDatabase = async (connectionPromise) => {
         
         CREATE TABLE IF NOT EXISTS patient(
             id_utilisateur INTEGER NOT NULL,
-            Numero_carte_sante TEXT NOT NULL,
+            numero_carte_sante TEXT NOT NULL,
             numero_tel TEXT NOT NULL,
             CONSTRAINT fk_id_utilisateur
                 FOREIGN KEY (id_utilisateur)
@@ -47,44 +47,45 @@ const createDatabase = async (connectionPromise) => {
                 ON DELETE SET NULL
                 ON UPDATE CASCADE
         );
+        
         CREATE TABLE IF NOT EXISTS infirmier(
+            code_infirmier INTEGER PRIMARY KEY AUTOINCREMENT,
             id_utilisateur INTEGER,
-            code_infirmier INTEGER ,
-            PRIMARY KEY(id_utilisateur, code_infirmier),
-            CONSTRAINT fk_id_utilisateur 
+            CONSTRAINT fk_id_utilisateur
                 FOREIGN KEY (id_utilisateur)
                 REFERENCES utilisateur(id_utilisateur) 
                 ON DELETE SET NULL 
                 ON UPDATE CASCADE
         );
-        
+
         CREATE TABLE IF NOT EXISTS urgence(
-            id_urgence INTEGER IDENTITY(1,1),
-            id_utilisateur INTEGER,
-            niveau_urgence INTEGER,
-            points_urgences INTEGER,
+            id_utilisateur INTEGER NOT NULL,
+            id_urgence INTEGER PRIMARY KEY AUTOINCREMENT,
+            niveau_urgence INTEGER NOT NULL,
+            points_urgence INTEGER NOT NULL,
             date_urgence DATE,
             etat_urgence BIT NOT NULL,
-            PRIMARY KEY (id_urgence, id_utilisateur),
-            CONSTRAINT fk_utilisateur_urgence
+            CONSTRAINT fk_id_utilisateur
                 FOREIGN KEY (id_utilisateur)
-                REFERENCES utilisateur(id_utilisateur) 
-                ON DELETE SET NULL 
+                REFERENCES utilisateur(id_utilisateur)
+                ON DELETE SET NULL
                 ON UPDATE CASCADE
         );
         
         INSERT INTO type_utilisateur (type) VALUES 
-        ('regulier'),
-        ('infirmier'),
-        ('administrateur');
+            ('regulier'),
+            ('infirmier'),
+            ('administrateur');
 
-        INSERT INTO utilisateur (id_type_utilisateur, nom, prenom, courriel, nom_utilisateur, mot_passe) VALUES 
-            (2, 'Admin', 'admin', 'admin@stum.ca', 'admin', 'Admin'),
-            (1, 'Patient', 'test', 'patient@stum.com', 'patient', 'test');
-            
-        INSERT INTO patient(id_utilisateur, Numero_carte_sante, numero_tel) VALUES
+        INSERT INTO utilisateur (id_utilisateur, id_type_utilisateur, nom, prenom, courriel, nom_utilisateur, mot_passe,date_ajout) VALUES 
+            (1, 2, 'Admin', 'admin', 'admin@stum.ca', 'admin', '$2b$10$kQWXsHl9PG5puNHj7q8qY.AQ8LgsTxJISfgy1AVS7dwZ.kzeBCeYS',datetime('now', 'localtime')),
+            (2, 1, 'Patient', 'test', 'patient@stum.com', 'patient', 'test',datetime('now', 'localtime'));
+
+        INSERT INTO patient(id_utilisateur, numero_carte_sante, numero_tel) VALUES
             (2, '1234', '1234567890');
-  
+        
+        INSERT INTO infirmier (code_infirmier, id_utilisateur) VALUES
+            (2000, 1);
 `
     );
 
