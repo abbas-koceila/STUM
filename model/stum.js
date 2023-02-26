@@ -1,6 +1,4 @@
 import { promesseConnexion } from './connexion.js';
-import { getUserId } from './utilisateur.js'
-
 export const getUrgences = async () => {
   let connexion = await promesseConnexion;
 
@@ -59,18 +57,34 @@ export const updateRDVuser = async () => {
   );
 
 
-  console.log(urgences);
-  console.log('rdvs lenghth',rdvs.length);
-  console.log('urgences length',urgences.length);
+
 
 
   if ( rdvs && rdvs.length > 0 ) {
     for (let i = 0; i < utilisateurs.length; i++) {
+      let DATENOW = new Date(Date.now());
 
+      // get ancien rdv avant update 
+
+      let oldrdv = await connexion.get(
+        `SELECT id_rendez_vous, date_rendez_vous FROM rendez_vous WHERE id_utilisateur = ? `,
+        [utilisateurs[i]?.id_utilisateur]
+      );
+         // mettre a jour rdv 
       await connexion.run(
         `UPDATE rendez_vous SET date_rendez_vous = ? WHERE id_utilisateur = ?`,
         [rdvs[i]?.date_rendez_vous, urgences[i]?.id_utilisateur]
       );
+
+      // get updatedrdv rdv avant update 
+      let updatedrdv = await connexion.get(
+        `SELECT id_rendez_vous, date_rendez_vous FROM rendez_vous WHERE id_utilisateur = ?`,
+        [utilisateurs[i]?.id_utilisateur]
+      );
+          //verifier quel rdv mis a jour 
+      if (oldrdv[i]?.date_rendez_vous !== updatedrdv[i]?.date_rendez_vous) {
+        console.log(`Le rendez-vous pour l'utilisateur ${urgences[i]?.id_utilisateur} a été mis à jour.`);
+      }
     }
   }
 };
@@ -84,7 +98,7 @@ export const assignRdv = async (id_utilisateur) => {
  
   );
 
-  console.log("wagiiii last rdv est ",lastRdv.last_rdv_date)
+
 
   let newRdvDate;
   //si le rdv il n<existe pas ou le dernier rdv date de plus de 10 minutes en arriere 
@@ -93,16 +107,12 @@ export const assignRdv = async (id_utilisateur) => {
     newRdvDate = new Date(Date.now() + 30 * 60 * 1000);
 
     
-
-    console.log('ichem a if ');
-    console.log('new rdv n if',newRdvDate);
   } else {
 
  
     newRdvDate = new Date(lastRdv.last_rdv_date);
     newRdvDate.setMinutes(newRdvDate.getMinutes() + 30);
-    console.log('ichem a else ')
-    console.log('new rdv n else',newRdvDate);
+
   }
 
   await connexion.run(
@@ -114,6 +124,21 @@ export const assignRdv = async (id_utilisateur) => {
 
    await updateRDVuser();
 
+}
+
+export const  checkUrgenceEnCours = async (id_utilisateur) =>{
+  let connexion = await promesseConnexion;
+  try { 
+   
+    const result = await connexion.get(
+      `SELECT COUNT(*) as count FROM urgence WHERE id_utilisateur = ? AND etat_urgence = 1`,
+      [id_utilisateur]
+    );
+    return result.count;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
 
@@ -129,6 +154,7 @@ export const addUrgence = async (niveauUrgence, pointsUrgence, id_utilisateur) =
   let dateUrgence = new Date(Date.now());
 
 
+ 
   await connexion.run(
     `INSERT INTO urgence (id_utilisateur, niveau_urgence, points_urgence, date_urgence, etat_urgence)
         VALUES(?,?,?,?,?)`,
@@ -136,6 +162,8 @@ export const addUrgence = async (niveauUrgence, pointsUrgence, id_utilisateur) =
   );
 
   await assignRdv(id_utilisateur);
+  
+ 
 
 }
 

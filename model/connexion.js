@@ -58,7 +58,7 @@ const createDatabase = async (connectionPromise) => {
         );
 
         CREATE TABLE IF NOT EXISTS urgence(
-            id_utilisateur INTEGER NOT NULL UNIQUE,
+            id_utilisateur INTEGER NOT NULL ,
             id_urgence INTEGER PRIMARY KEY AUTOINCREMENT,
             id_rendez_vous INTEGER,
             niveau_urgence INTEGER NOT NULL,

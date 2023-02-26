@@ -22,7 +22,7 @@ formUrgence.addEventListener('submit', async (event) => {
       body: JSON.stringify(selectedInputs)
   });
 
-  if (response.ok) {
+  if (response.status === 200) {
     console.log('l urgence est ajoute');
     alert('l urgence est ajoute avec succes');
 
@@ -31,18 +31,16 @@ formUrgence.addEventListener('submit', async (event) => {
       console.log('non ajoute');
       window.alert('Vous avez déjà créé une demande d\'urgence. Vous ne pouvez pas en créer une autre.');
   }
+  else if(response.status === 400){
+    window.alert('Vous avez déjà  une demande d\'urgence en cours');
+   
+  }
 
 
 
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    
-
-     var totalScore = calculScore(selectedInputs);
 
 
-     console.log(totalScore);
-     console.log("le niveau d'urgence est  ",calculNiveauUrgence(totalScore));
-
+ 
 
 
 
