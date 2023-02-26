@@ -92,7 +92,7 @@
                 <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                   aria-label="Platform(s): activate to sort column ascending">Date d'entrée</th>
                 <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
-                  aria-label="Engine version: activate to sort column ascending">date de derniere modification
+                  aria-label="Engine version: activate to sort column ascending">Date Rendez-Vous
                 </th>
                 <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1"
                   aria-label="CSS grade: activate to sort column ascending">Modification</th>
@@ -102,9 +102,9 @@
               {{#each patient}}
               <tr class="odd">
                 <td class="dtr-control sorting_1" tabindex="0">{{this.nom}} {{this.prenom}}</td>
-                <td>{{this.niveau_urgence}} </td>
-                <td>{{this.date_ajout}}</td>
-                <td>2022-11-25 12:30</td>
+                <td>{{this.niveau_urgence}}</td>
+                <td>{{this.date_urgence}}</td>
+                <td>{{date_rendez_vous}}</td>
                 <td class="project-actions text-right">
                   <a class="btn btn-info btn-sm" href="/modification">
                     <i class="fas fa-pencil-alt">

@@ -29,7 +29,6 @@ const createDatabase = async (connectionPromise) => {
             prenom TEXT NOT NULL,
             courriel TEXT NOT NULL UNIQUE,
             mot_passe TEXT NOT NULL,
-            date_ajout DATE,
             CONSTRAINT fk_type_utilisateur 
                 FOREIGN KEY (id_type_utilisateur)
                 REFERENCES type_utilisateur(id_type_utilisateur) 
@@ -59,27 +58,47 @@ const createDatabase = async (connectionPromise) => {
         );
 
         CREATE TABLE IF NOT EXISTS urgence(
-            id_utilisateur INTEGER NOT NULL,
+            id_utilisateur INTEGER NOT NULL UNIQUE,
             id_urgence INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_rendez_vous INTEGER,
             niveau_urgence INTEGER NOT NULL,
             points_urgence INTEGER NOT NULL,
             date_urgence DATE,
             etat_urgence BIT NOT NULL,
+            
+            CONSTRAINT fk_id_utilisateur
+                FOREIGN KEY (id_utilisateur)
+                REFERENCES utilisateur(id_utilisateur)
+                ON DELETE SET NULL
+                ON UPDATE CASCADE
+
+            CONSTRAINT fk_id_rendez_vous
+            FOREIGN KEY (id_rendez_vous)
+            REFERENCES rendez_vous(id_rendez_vous)
+            ON DELETE SET NULL
+            ON UPDATE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS rendez_vous(
+            id_rendez_vous INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_utilisateur INTEGER NOT NULL,
+            date_rendez_vous DATE NOT NULL,
             CONSTRAINT fk_id_utilisateur
                 FOREIGN KEY (id_utilisateur)
                 REFERENCES utilisateur(id_utilisateur)
                 ON DELETE SET NULL
                 ON UPDATE CASCADE
         );
+
         
         INSERT INTO type_utilisateur (type) VALUES 
             ('regulier'),
             ('infirmier'),
             ('administrateur');
 
-        INSERT INTO utilisateur (id_utilisateur, id_type_utilisateur, nom, prenom, courriel, nom_utilisateur, mot_passe,date_ajout) VALUES 
-            (1, 2, 'Admin', 'admin', 'admin@stum.ca', 'admin', '$2b$10$kQWXsHl9PG5puNHj7q8qY.AQ8LgsTxJISfgy1AVS7dwZ.kzeBCeYS',datetime('now', 'localtime')),
-            (2, 1, 'Patient', 'test', 'patient@stum.com', 'patient', 'test',datetime('now', 'localtime'));
+        INSERT INTO utilisateur (id_utilisateur, id_type_utilisateur, nom, prenom, courriel, nom_utilisateur, mot_passe) VALUES 
+            (1, 2, 'Admin', 'admin', 'admin@stum.ca', 'admin', 'Admin'),
+            (2, 1, 'Patient', 'test', 'patient@stum.com', 'patient', 'test');
 
         INSERT INTO patient(id_utilisateur, numero_carte_sante, numero_tel) VALUES
             (2, '1234', '1234567890');
@@ -102,5 +121,5 @@ export let promesseConnexion = open({
 // et on y insère des données fictive de test.
 if (IS_NEW) {
     promesseConnexion = createDatabase(promesseConnexion);
-} 
+}
 
