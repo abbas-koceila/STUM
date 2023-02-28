@@ -58,18 +58,38 @@ const createDatabase = async (connectionPromise) => {
         );
 
         CREATE TABLE IF NOT EXISTS urgence(
-            id_utilisateur INTEGER NOT NULL,
+            id_utilisateur INTEGER NOT NULL ,
             id_urgence INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_rendez_vous INTEGER,
             niveau_urgence INTEGER NOT NULL,
             points_urgence INTEGER NOT NULL,
             date_urgence DATE,
             etat_urgence BIT NOT NULL,
+            
+            CONSTRAINT fk_id_utilisateur
+                FOREIGN KEY (id_utilisateur)
+                REFERENCES utilisateur(id_utilisateur)
+                ON DELETE SET NULL
+                ON UPDATE CASCADE
+
+            CONSTRAINT fk_id_rendez_vous
+            FOREIGN KEY (id_rendez_vous)
+            REFERENCES rendez_vous(id_rendez_vous)
+            ON DELETE SET NULL
+            ON UPDATE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS rendez_vous(
+            id_rendez_vous INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_utilisateur INTEGER NOT NULL,
+            date_rendez_vous DATE NOT NULL,
             CONSTRAINT fk_id_utilisateur
                 FOREIGN KEY (id_utilisateur)
                 REFERENCES utilisateur(id_utilisateur)
                 ON DELETE SET NULL
                 ON UPDATE CASCADE
         );
+
         
         INSERT INTO type_utilisateur (type) VALUES 
             ('regulier'),
@@ -77,14 +97,21 @@ const createDatabase = async (connectionPromise) => {
             ('administrateur');
 
         INSERT INTO utilisateur (id_utilisateur, id_type_utilisateur, nom, prenom, courriel, nom_utilisateur, mot_passe) VALUES 
-            (1, 2, 'Admin', 'admin', 'admin@stum.ca', 'admin', 'Admin'),
-            (2, 1, 'Patient', 'test', 'patient@stum.com', 'patient', 'test');
+            (1, 2, 'blankAdmin', 'blankAdmin', 'blankAdmin', 'blankAdmin', 'blankAdmin'),
+            (2, 1, 'blankPatient', 'blankPatient', 'blankPatient', 'blankPatient', 'blankPatient');
 
-        INSERT INTO patient(id_utilisateur, numero_carte_sante, numero_tel) VALUES
+        INSERT INTO patient (id_utilisateur, numero_carte_sante, numero_tel) VALUES
             (2, '1234', '1234567890');
         
         INSERT INTO infirmier (code_infirmier, id_utilisateur) VALUES
             (2000, 1);
+
+        INSERT INTO urgence (id_utilisateur, id_urgence, id_rendez_vous, niveau_urgence, points_urgence, date_urgence, etat_urgence) VALUES
+            (3, 2, 2, 1, 1, 1, 0),
+            (3, 3, 3, 1, 1, 1, 0);
+        INSERT INTO rendez_vous (id_rendez_vous, id_utilisateur, date_rendez_vous) VALUES
+            (2, 3, 1),
+            (3, 3, 1);
 `
     );
 
@@ -101,5 +128,4 @@ export let promesseConnexion = open({
 // et on y insère des données fictive de test.
 if (IS_NEW) {
     promesseConnexion = createDatabase(promesseConnexion);
-} 
-
+}

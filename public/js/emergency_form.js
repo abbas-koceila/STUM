@@ -1,29 +1,48 @@
+
 let formUrgence = document.getElementById('emergency_form');
 let btnSubmit = document.getElementById('add-submit');
 
-function calculScore(inputs) {
-
-    return Array.prototype.reduce.call(inputs, function (accumulator, element) {
-        return accumulator + parseInt(element.value);
-    }, 0);
-
-}
 
 
-console.log(formUrgence);
+// submit form 
+
 formUrgence.addEventListener('submit', async (event) => {
     event.preventDefault();
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
-    var selectedInputs = document.querySelectorAll('input[type="checkbox"]:checked, input[type="radio"]:checked');
+    let selectedInputs = Array.from(document.querySelectorAll('input[type="checkbox"]:checked, input[type="radio"]:checked'))
+    .map(input => ({ [input.name]: input.value }));
+
+     console.log(selectedInputs);
 
 
-     var totalScore = calculScore(selectedInputs);
+  
+    let response = await fetch('/addUrgence', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(selectedInputs)
+  });
+
+  if (response.status === 200) {
+    console.log('l urgence est ajoute');
+    alert('l urgence est ajoute avec succes');
+
+  } else if (response.status === 409) {
+
+      console.log('non ajoute');
+      window.alert('Vous avez déjà créé une demande d\'urgence. Vous ne pouvez pas en créer une autre.');
+  }
+  else if(response.status === 400){
+    window.alert('Vous avez déjà  une demande d\'urgence en cours');
+   
+  }
 
 
-     console.log(totalScore);
 
-     window.location.replace('/rdvFutur'); 
+
+
+ 
+
+
 
  });
 
