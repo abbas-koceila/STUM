@@ -9,6 +9,17 @@ export const getUserId = async (courriel) => {
     return newId.lastID;
 }
 
+export const getUtilisateurById = async (id) => {
+    let connexion = await promesseConnexion;
+
+    let utilisateur = await connexion.get( `SELECT * FROM utilisateur WHERE id_utilisateur=?`,[id]);
+
+    return utilisateur;
+}
+
+
+
+
 const addUtilisateur =async (nomUtilisateur, nom, prenom, courriel, motDePasse)=>{
     let connexion = await promesseConnexion;
 
