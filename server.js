@@ -24,6 +24,8 @@ import { addPatient } from './model/utilisateur.js';
 import { addUrgence, checkUrgenceEnCours } from './model/stum.js';
 import { calculNiveauUrgence, calculScore } from './model/urgence.js'
 
+
+
 // Création de la base de données de session
 const MemoryStore = memorystore(session);
 
@@ -47,11 +49,15 @@ app.use(session({
     secret: process.env.SESSION_SECRET
 }));
 
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(express.json());
+
+
 
 
 // Ajouter les routes ici ...
@@ -219,8 +225,8 @@ app.post('/addUrgence', async (req, res) => {
     let point_urgence = await calculScore(data);
     console.log(point_urgence);
     let niveau_urgence = await calculNiveauUrgence(point_urgence);
-    console.log('checkUrgenceEnCours',await checkUrgenceEnCours(id_user));
-    if (await checkUrgenceEnCours(id_user)<1) {
+    console.log('checkUrgenceEnCours', await checkUrgenceEnCours(id_user));
+    if (await checkUrgenceEnCours(id_user) < 1) {
         try {
             console.log('whyyyyyyyy');
             await addUrgence(niveau_urgence, point_urgence, id_user)
@@ -332,6 +338,47 @@ app.get('/rdvFutur', async (request, response) => {
     });
 });
 
+
+app.post('envoiMail', async (req, res) => {
+
+    const data = req.body; 
+
+    const transporter = nodemailer.createTransport({
+        host: 'smtp-mail.outlook.com',                  // hostname
+        service: 'outlook',                             // service name
+        secureConnection: false,
+        tls: {
+            ciphers: 'SSLv3'                            // tls version
+        },
+        port: 587,
+        auth: {
+            user: process.env.USEREMAIL,
+            pass: process.env.PASSEMAIL,
+        }
+    });
+
+    try {
+        let info = await transporter.sendMail({
+            from:  'STUM <stum.rdv@outlook.com>',
+            to: data.to,
+            subject: data.subject,
+            text: data.text,
+
+        });
+        res.status(200).send('Email sent successfully');
+        console.log("Message sent: %s", info.messageId);
+        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+      
+        // Preview only available when sending through an Ethereal account
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Failed to send email');
+    }
+   
+
+});
 
 // Renvoyer une erreur 404 pour les routes non définies
 app.use(function (request, response) {
