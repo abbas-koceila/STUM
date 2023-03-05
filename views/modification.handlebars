@@ -8,28 +8,27 @@
       <!-- /.card-header -->
       <!-- form start -->
       <label for="nom" class="formlabel">Nom *</label>
-      <input type="text" placeholder="Yorguen" class="form-control" id="nom" name="nom">
+      <input type="text" placeholder="Yorguen" class="form-control" id="nom" name="nom" value={{data.nom}}>
       <div id="error-nom" class="error"></div>
 
       <label for="prenom" class="formlabel">Prénom *</label>
-      <input type="text" placeholder="John" class="form-control" id="prenom" name="prenom">
+      <input type="text" placeholder="John" class="form-control" id="prenom" name="prenom" value="{{data.prenom}}">
       <div id="error-prenom" class="error"></div>
 
       <label for="email" class="formlabel">Adresse Courriel *</label>
-      <input type="email" placeholder="johndoe@example.com" class="form-control" id="email" name="email">
+      <input type="email" placeholder="johndoe@example.com" class="form-control" id="email" name="email" value="{{data.courriel}}">
       <div id="error-email" class="error"></div>
 
       <label for="telephone" class="formlabel">Numéro de téléphone *</label>
-      <input type="tel" placeholder="(123) 456-7890" class="form-control" id="telephone" name="telephone">
+      <input type="tel" placeholder="(123) 456-7890" class="form-control" id="telephone" name="telephone" value="{{data.numero_tel}}">
       <div id="error-telephone" class="error"></div>
 
       <label for="carte-sante" class="formlabel">Numéro de carte santé *</label>
-      <input type="text" placeholder="1234 567 890 XX" class="form-control" id="carte-sante" name="carte-sante">
+      <input type="text" placeholder="1234 567 890 XX" class="form-control" id="carte-sante" name="carte-sante" value="{{data.numero_carte_sante}}">
       <div id="error-carte-sante" class="error"></div>
 
       <label for="adresse" class="formlabel">Adresse *</label>
-      <input type="text" placeholder="801 Aviation Pkwy, Ottawa, ON K1K 4R3" class="form-control" id="adresse"
-        name="adresse">
+      <input type="text" placeholder="801 Aviation Pkwy, Ottawa, ON K1K 4R3" class="form-control" id="adresse" name="adresse" value="">
       <div id="error-adresse" class="error"></div>
 
       <!-- general form elements disabled -->
@@ -39,37 +38,44 @@
           <!-- textarea -->
           <div class="form-group">
             <label for="raison">Quelle est la raison de votre demande d'urgence ?</label>
-            <textarea class="form-control" rows="3" placeholder="raison" id="raison" name="raison"></textarea>
+            <textarea class="form-control" rows="3" placeholder="raison" id="raison" name="raison" >{{data.description}}</textarea>
           </div>
 
           <!-- text input -->
           <div class="form-group">
             <label for="date">Quand est-ce que cela a commencé / s'est produit ?</label>
-            <input type="datetime-local" class="form-control" id="date" name="date_debut_symptomes" required>
+            <input type="datetime-local" class="form-control" id="date" name="date_debut_symptomes" required value="{{data.date_debut_symptomes}}"/> 
           </div>
 
           <!-- text input -->
           <div class="form-group">
             <label for="description">Quelle est la raison de votre demande d'urgence ?</label>
-            <input type="text" class="form-control" placeholder="Entrez votre description ici" id="description"
-              name="description">
+            <input type="text" class="form-control" placeholder="Entrez votre description ici" id="description" name="description" value="{{data.description}}">
           </div>
 
           <!-- textarea -->
           <div class="form-group">
             <label for="symptomes">Quels symptômes ressentez-vous ?</label>
-            <textarea class="form-control" rows="3" placeholder="Entrez vos symptômes ici" id="symptomes"
-              name="symptomes"></textarea>
+            <textarea class="form-control" rows="3" placeholder="Entrez vos symptômes ici" id="symptomes" name="symptomes">{{data.symptomes}}</textarea>
           </div>
 
           <div class="form-group">
             <label for="medical_condition"> Avez-vous des conditions médicales préexistantes? </label>
+           
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="medical_condition" id="medical_condition_oui">
+              
+              <input class="form-check-input" type="radio" name="medical_condition" id="medical_condition_oui" 
+               {{#if this.data.medical_condition}}checked
+               {{/if}}
+               >
+              
               <label class="form-check-label" for="medical_condition_oui">Oui</label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="medical_condition" id="medical_condition_non">
+              <input class="form-check-input" type="radio" name="medical_condition" id="medical_condition_non" 
+              {{#unless this.data.medical_condition}}checked
+               {{/unless}}
+               >
               <label class="form-check-label" for="medical_condition_non">Non</label>
             </div>
           </div>
@@ -78,11 +84,16 @@
             <label for="hospital_history"> Avez-vous été admis à l'hôpital ou eu des interventions chirurgicales
               dans le passé? </label>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="hospital_history" id="hospital_history_oui">
+              <input class="form-check-input" type="radio" name="hospital_history" id="hospital_history_oui" 
+              {{#if this.data.hospital_history}}checked
+               {{/if}}>
               <label class="form-check-label" for="hospital_history_oui">Oui</label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="hospital_history" id="hospital_history_non">
+              <input class="form-check-input" type="radio" name="hospital_history" id="hospital_history_non"
+              {{#unless this.data.hospital_history}}checked
+               {{/unless}}
+               >
               <label class="form-check-label" for="hospital_history_non">Non</label>
             </div>
           </div>
@@ -90,11 +101,15 @@
           <div class="form-group">
             <label for="medication_history"> Prenez-vous des médicaments, des vitamines ou des suppléments? </label>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="medication_history" id="medication_history_oui">
+              <input class="form-check-input" type="radio" name="medication_history" id="medication_history_oui" 
+              {{#if this.data.medication_history}}checked
+               {{/if}}>
               <label class="form-check-label" for="medication_history_oui">Oui</label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="medication_history" id="medication_history_non">
+              <input class="form-check-input" type="radio" name="medication_history" id="medication_history_non"
+              {{#unless this.data.medication_history}}checked
+               {{/unless}}>
               <label class="form-check-label" for="medication_history_non">Non</label>
             </div>
           </div>
@@ -102,7 +117,7 @@
           <div class="form-group">
             <label for="last_meal"> Quand avez-vous mangé ou bu pour la dernière fois? </label>
             <input type="datetime-local" class="form-control" min="2022-11-08T00:00" max="2999-12-12T00:00"
-              id="last_meal" name="last_meal" required>
+              id="last_meal" name="last_meal" required value="{{data.last_meal}}">
           </div>
 
           <div class="form-group">
@@ -119,12 +134,16 @@
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="tete_gauche">
+                  <input class="form-check-input" type="checkbox" name="tete_gauche"
+                   {{#if this.data.tete_gauche}}checked
+                  {{/if}}>
                 </div>
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="tete_droite">
+                  <input class="form-check-input" type="checkbox" name="tete_droite"
+                  {{#if this.data.tete_droite}}checked
+                  {{/if}}>
                 </div>
               </div>
             </div>
@@ -136,12 +155,16 @@
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="cou_gauche">
+                  <input class="form-check-input" type="checkbox" name="cou_gauche"
+                  {{#if this.data.cou_gauche}}checked
+                  {{/if}}>
                 </div>
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="cou_droite">
+                  <input class="form-check-input" type="checkbox" name="cou_droite"
+                  {{#if this.data.cou_droite}}checked
+                  {{/if}}>
                 </div>
               </div>
             </div>
@@ -153,12 +176,16 @@
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="epaule_gauche">
+                  <input class="form-check-input" type="checkbox" name="epaule_gauche"
+                  {{#if this.data.epaule_gauche}}checked
+                  {{/if}}>
                 </div>
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="epaule_droite">
+                  <input class="form-check-input" type="checkbox" name="epaule_droite"
+                  {{#if this.data.epaule_droite}}checked
+                  {{/if}}>
                 </div>
               </div>
             </div>
@@ -170,12 +197,16 @@
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="poitrine_gauche">
+                  <input class="form-check-input" type="checkbox" name="poitrine_gauche"
+                  {{#if this.data.poitrine_gauche}}checked
+                  {{/if}}>
                 </div>
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="poitrine_droite">
+                  <input class="form-check-input" type="checkbox" name="poitrine_droite"
+                  {{#if this.data.poitrine_droite}}checked
+                  {{/if}}>
                 </div>
               </div>
             </div>
@@ -187,15 +218,19 @@
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="coude_gauche">
+                  <input class="form-check-input" type="checkbox" name="coude_gauche"
+                  {{#if this.data.coude_gauche}}checked
+                  {{/if}}>
                 </div>
               </div>
 
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="coude_droite">
+                  <input class="form-check-input" type="checkbox" name="coude_droite"
+                  {{#if this.data.coude_droite}}checked
+                  {{/if}}>
                 </div>
-              </div>>
+              </div>
 
             </div>
 
@@ -208,12 +243,16 @@
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="main_et_poignet_gauche">
+                  <input class="form-check-input" type="checkbox" name="main_et_poignet_gauche"
+                  {{#if this.data.main_et_poignet_gauche}}checked
+                  {{/if}}>
                 </div>
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="main_et_poignet_droit">
+                  <input class="form-check-input" type="checkbox" name="main_et_poignet_droit"
+                  {{#if this.data.main_et_poignet_droit}}checked
+                  {{/if}}>
                 </div>
               </div>
             </div>
@@ -225,12 +264,16 @@
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="hanche_gauche">
+                  <input class="form-check-input" type="checkbox" name="hanche_gauche"
+                  {{#if this.data.hanche_gauche}}checked
+                  {{/if}}>
                 </div>
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="hanche_droite">
+                  <input class="form-check-input" type="checkbox" name="hanche_droite"
+                  {{#if this.data.hanche_droite}}checked
+                  {{/if}}>
                 </div>
               </div>
             </div>
@@ -242,12 +285,16 @@
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="cuisse_gauche">
+                  <input class="form-check-input" type="checkbox" name="cuisse_gauche"
+                  {{#if this.data.cuisse_gauche}}checked
+                  {{/if}}>
                 </div>
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="cuisse_droite">
+                  <input class="form-check-input" type="checkbox" name="cuisse_droite"
+                  {{#if this.data.cuisse_droite}}checked
+                  {{/if}}>
                 </div>
               </div>
             </div>
@@ -259,12 +306,16 @@
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="genou_gauche">
+                  <input class="form-check-input" type="checkbox" name="genou_gauche"
+                  {{#if this.data.genou_gauche}}checked
+                  {{/if}}>
                 </div>
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="genou_droit">
+                  <input class="form-check-input" type="checkbox" name="genou_droit"
+                  {{#if this.data.genou_droit}}checked
+                  {{/if}}>
                 </div>
               </div>
             </div>
@@ -276,12 +327,16 @@
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="jambe_gauche">
+                  <input class="form-check-input" type="checkbox" name="jambe_gauche"
+                  {{#if this.data.jambe_gauche}}checked
+                  {{/if}}>
                 </div>
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="jambe_droite">
+                  <input class="form-check-input" type="checkbox" name="jambe_droite"
+                  {{#if this.data.jambe_droite}}checked
+                  {{/if}}>
                 </div>
               </div>
             </div>
@@ -293,12 +348,16 @@
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="pied_gauche">
+                  <input class="form-check-input" type="checkbox" name="pied_gauche"
+                  {{#if this.data.pied_gauche}}checked
+                  {{/if}}>
                 </div>
               </div>
               <div class="col-3">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="pied_droite">
+                  <input class="form-check-input" type="checkbox" name="pied_droite"
+                  {{#if this.data.pied_droite}}checked
+                  {{/if}}>
                 </div>
               </div>
             </div>
@@ -322,7 +381,7 @@
 
               <!-- debut range -->
               <div class="form-groupe ">
-                <label class="font-weight-normal">Douleur au moment présent : </label>
+                <label class="font-weight-normal douleur_prensent_class" data-id={{data.douleur_present}}>Douleur au moment présent : </label>
 
                 <div class="row   ">
                   <div class="col form-check ">
@@ -409,7 +468,7 @@
 
             <!-- debut range -->
             <div class="form-group">
-              <label class="font-weight-normal">Douleur habituelle depuis les 8 derniers jours : </label>
+              <label class="font-weight-normal douleur8jours_class" data-id={{data.douleur8jours}}>Douleur habituelle depuis les 8 derniers jours : </label>
 
               <div class="row ">
                 <div class=" col form-check ">
@@ -493,7 +552,7 @@
 
             <!-- debut range -->
             <div class="form-group ">
-              <label class="font-weight-normal">Douleur la plus intense depuis les 8 derniers jours :</label>
+              <label class="font-weight-normal douleur_intense_class" data-id={{data.douleur_intense}}>Douleur la plus intense depuis les 8 derniers jours :</label>
 
               <div class="row">
                 <div class="col form-check">

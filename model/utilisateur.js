@@ -58,7 +58,7 @@ export const getPatient=async ()=>{
     let connexion = await promesseConnexion;
 
    let utilisateur= await  connexion.all(
-        `SELECT ur.date_urgence, ur.niveau_urgence, ut.nom , ut.prenom, rdv.date_rendez_vous FROM urgence ur
+        `SELECT ur.id_utilisateur, ur.date_urgence, ur.niveau_urgence, ut.nom , ut.prenom, rdv.date_rendez_vous FROM urgence ur
         INNER JOIN utilisateur ut 
         ON ur.id_utilisateur = ut.id_utilisateur
         INNER JOIN rendez_vous rdv  
@@ -76,3 +76,27 @@ export const getPatient=async ()=>{
     
     return utilisateur;
 }
+export const getFormulaire=async (id_user)=>{
+    let connexion = await promesseConnexion;
+
+   let formulaire= await  connexion.all(
+        `SELECT ut.nom, ut.prenom , ut.courriel, p.numero_carte_sante,p.numero_tel,
+        f.date_debut_symptomes, f.description, f.symptomes,
+        f.medical_condition, f.hospital_history, f.medication_history, f.last_meal,
+        f.tete_gauche,f.tete_droite,f.cou_gauche, f.cou_droite, f.epaule_gauche,
+        f.epaule_droite, f.poitrine_gauche, f.poitrine_droite, f.coude_gauche,
+        f.coude_droite, f.main_et_poignet_gauche, f.main_et_poignet_droit, f.hanche_gauche,
+        f.hanche_droite, f.cuisse_gauche, f.cuisse_droite, f.genou_gauche, f.genou_droit,
+        f.jambe_gauche, f.jambe_droite, f.pied_gauche, f.pied_droite,
+        f.douleur_present, f.douleur8jours, f.douleur_intense
+        FROM utilisateur ut
+        INNER JOIN patient p 
+        ON p.id_utilisateur=ut.id_utilisateur
+        INNER JOIN formulaire f
+        On ut.id_utilisateur = f.id_utilisateur 
+        WHERE ut.id_utilisateur = ?`,
+        [id_user]
+    );
+    return formulaire;
+}
+

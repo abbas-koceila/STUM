@@ -73,10 +73,10 @@ const createDatabase = async (connectionPromise) => {
                 ON UPDATE CASCADE
 
             CONSTRAINT fk_id_rendez_vous
-            FOREIGN KEY (id_rendez_vous)
-            REFERENCES rendez_vous(id_rendez_vous)
-            ON DELETE SET NULL
-            ON UPDATE CASCADE
+                FOREIGN KEY (id_rendez_vous)
+                REFERENCES rendez_vous(id_rendez_vous)
+                ON DELETE SET NULL
+                ON UPDATE CASCADE
         );
 
         CREATE TABLE IF NOT EXISTS rendez_vous(
@@ -89,6 +89,54 @@ const createDatabase = async (connectionPromise) => {
                 ON DELETE SET NULL
                 ON UPDATE CASCADE
         );
+        CREATE TABLE formulaire (
+            id_utilisateur INTEGER NOT NULL UNIQUE,
+            id_urgence INTEGER PRIMARY KEY,
+            date_debut_symptomes DATE,
+            description TEXT,
+            symptomes TEXT,
+            medical_condition BOOLEAN,
+            hospital_history BOOLEAN,
+            medication_history BOOLEAN,
+            last_meal DATE,
+            tete_gauche INT,
+            tete_droite INT,
+            cou_gauche INT,
+            cou_droite INT,
+            epaule_gauche INT,
+            epaule_droite INT,
+            poitrine_gauche INT,
+            poitrine_droite INT,
+            coude_gauche INT,
+            coude_droite INT,
+            main_et_poignet_gauche INT,
+            main_et_poignet_droit INT,
+            hanche_gauche INT,
+            hanche_droite INT,
+            cuisse_gauche INT,
+            cuisse_droite INT,
+            genou_gauche INT,
+            genou_droit INT,
+            jambe_gauche INT,
+            jambe_droite INT,
+            pied_gauche INT,
+            pied_droite INT,
+            douleur_present INTEGER,
+            douleur8jours INTEGER,
+            douleur_intense INTEGER,
+
+            CONSTRAINT fk_id_utilisateur
+                FOREIGN KEY (id_utilisateur)
+                REFERENCES utilisateur(id_utilisateur)
+                ON DELETE SET NULL
+                ON UPDATE CASCADE
+          
+            CONSTRAINT fk_id_urgence 
+                FOREIGN KEY (id_urgence )
+                REFERENCES urgence(id_urgence)
+                ON DELETE SET NULL
+                ON UPDATE CASCADE
+          );
 
         
         INSERT INTO type_utilisateur (type) VALUES 
