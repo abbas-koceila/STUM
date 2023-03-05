@@ -1,5 +1,12 @@
+
 import { promesseConnexion } from './connexion.js';
-import { getUserId } from './utilisateur.js'
+import { getUtilisateurById } from './utilisateur.js';
+
+//send email
+import nodemailer from "nodemailer";
+
+import 'dotenv/config';
+
 
 export const getUrgences = async () => {
   let connexion = await promesseConnexion;
@@ -9,6 +16,7 @@ export const getUrgences = async () => {
   return resultat;
 
 }
+
 export const getId_Urgence = async (id_user) => {
   let connexion = await promesseConnexion;
 
@@ -18,6 +26,48 @@ export const getId_Urgence = async (id_user) => {
   return resultat;
 
 }
+
+
+
+export const sendEmail= async(emaildata)=> {
+
+  const transporter = nodemailer.createTransport({
+      host: 'smtp-mail.outlook.com',                  // hostname
+      service: 'outlook',                             // service name
+      secureConnection: false,
+      tls: {
+          ciphers: 'SSLv3'                            // tls version
+      },
+      port: 587,
+      auth: {
+          user: process.env.USEREMAIL,
+          pass: process.env.PASSEMAIL,
+      }
+  });
+
+  try {
+      let info = await transporter.sendMail({
+          from:  'STUM <stum.rdv@outlook.com>',
+          to: emaildata.to,
+          subject: emaildata.subject,
+          html: emaildata.html,
+
+      });
+      console.log("Message sent: %s", info.messageId);
+      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+    
+      // Preview only available when sending through an Ethereal account
+      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      return 'Email sent successfully';
+      
+  } catch (err) {
+      console.error(" catch erreur envoi",err);
+      throw new Error('Failed to send email');
+  }
+}
+
+
+
 export const updateEtatUrgence = async () => {
   let connexion = await promesseConnexion;
   let DATENOW = new Date(Date.now());
@@ -30,11 +80,11 @@ export const updateEtatUrgence = async () => {
         WHERE date_rendez_vous < ?
         
      )`,
-     [DATENOW]
+    [DATENOW]
   );
 
 }
-
+//mettre a jour le rdv
 export const updateRDVuser = async () => {
 
   updateEtatUrgence();
@@ -43,23 +93,23 @@ export const updateRDVuser = async () => {
 
   // Récupérer la liste des utilisateurs ayant une urgence
   let utilisateurs = await connexion.all(
-    `SELECT id_utilisateur FROM urgence `
+    `SELECT id_utilisateur FROM urgence where etat_urgence =1 `
   );
-  
 
+
+  // get rdv by date order
   let DATENOW = new Date(Date.now());
   let rdvs = await connexion.all(
     `SELECT id_rendez_vous, date_rendez_vous 
        FROM rendez_vous 
        where date_rendez_vous >= ?
        ORDER BY date_rendez_vous ASC`,
-       [DATENOW]
+    [DATENOW]
   );
-  console.log(rdvs) ;
 
-
+  // get urgence by point order
   let urgences = await connexion.all(
-        
+
     `SELECT id_urgence,id_utilisateur, points_urgence 
        FROM urgence 
        where etat_urgence =1
@@ -67,41 +117,157 @@ export const updateRDVuser = async () => {
   );
 
 
-  console.log(urgences);
-  console.log('rdvs lenghth',rdvs.length);
-  console.log('urgences length',urgences.length);
-
-
-  if ( rdvs && rdvs.length > 0 ) {
+  // update rdv   et comparer entre l<ancien et le nouveau rdv pour les notifications
+  if (rdvs && rdvs.length > 0) {
     for (let i = 0; i < utilisateurs.length; i++) {
+      let DATENOW = new Date(Date.now());
 
+      // Récupérer l'ancien rendez-vous avant la mise à jour
+      let oldrdv = await connexion.get(
+        `SELECT id_rendez_vous, date_rendez_vous 
+             FROM rendez_vous 
+             WHERE id_utilisateur = ?`,
+        [urgences[i]?.id_utilisateur]
+      );
+
+
+      // mettre a jour rdv 
       await connexion.run(
         `UPDATE rendez_vous SET date_rendez_vous = ? WHERE id_utilisateur = ?`,
         [rdvs[i]?.date_rendez_vous, urgences[i]?.id_utilisateur]
       );
+      
+      // Récupérer le rendez-vous mis à jour
+      let updatedrdv = await connexion.get(
+        `SELECT id_rendez_vous, date_rendez_vous 
+           FROM rendez_vous 
+           WHERE id_utilisateur = ?`,
+        [urgences[i]?.id_utilisateur]
+      );
+
+
+      //get last urgence
+
+      let lastUrgence = await connexion.get(
+        `SELECT id_utilisateur FROM urgence ORDER BY id_urgence DESC LIMIT 1`
+      );
+
+      let emailData;
+     //get user info
+      const utilisateur = await getUtilisateurById(urgences[i]?.id_utilisateur);
+
+      const date = new Date(rdvs[i]?.date_rendez_vous);
+      const dateNormaleRdv = date.toLocaleString();
+
+      // Comparer les deux rendez-vous pour déterminer si l'ancien rendez-vous est différent du nouveau
+      
+      if (oldrdv?.date_rendez_vous !== updatedrdv?.date_rendez_vous) {
+
+      
+
+        //si le  premier rdv de l<utilisateur a ete updater des le premier coup 
+
+        if (lastUrgence?.id_utilisateur === urgences[i]?.id_utilisateur) {
+
+          console.log(`bonjour , votre rendez-vous Mr l'utilisateur${utilisateur.prenom} ${utilisateur.nom}est prevu pour le ${dateNormaleRdv} `);
+          console.log(" if");
+          emailData = {
+        
+            to: utilisateur.courriel,
+            subject: `rendez-vous d'urgence`,
+            html: `
+              <div >
+                <img src="https://i.pinimg.com/236x/40/1a/46/401a463bbcdd588d251dfc7655fd1cfc.jpg" alt="Logo" style="width: 200px; height: 100px;">
+                <p>Bonjour ${utilisateur.prenom} ${utilisateur.nom},</p>
+                <p> Votre rendez-vous est prevu pour le ${dateNormaleRdv} .</p>
+                <p>Veuillez noter que ceci est juste une version d'essai et que tout rendez-vous est juste une simulation.</p>
+              </div>
+            `
+          };
+          await sendEmail(emailData);
+
+        }
+
+        else {
+
+          console.log(`bonjour,votre rendez-vous Mr l'utilisateur${utilisateur.prenom} ${utilisateur.nom} a été mis à jour. le nouveau rdv est prevu pour :${dateNormaleRdv}`);
+          console.log("else");
+          emailData = {
+            to: utilisateur.courriel,
+            subject: `rendez-vous d'urgence`,
+            html: `
+              <div>
+                <img src="https://i.pinimg.com/236x/40/1a/46/401a463bbcdd588d251dfc7655fd1cfc.jpg" alt="Logo" style="width: 200px; height: 100px;">
+                <p>Bonjour ${utilisateur.prenom} ${utilisateur.nom},</p>
+                <p>Votre rendez-vous a été mis à jour. Le nouveau rendez-vous est prévu pour ${dateNormaleRdv}.</p>
+                <p>Veuillez noter que ceci est juste une version d'essai et que tout rendez-vous est juste une simulation.</p>
+              </div>
+            `
+          };
+
+          await sendEmail(emailData);
+
+        }
+     
+
+ 
+      }
+
+      // si le rdv de la derniere urgence n<est pas modifie   il envoi un courriell au patient
+      else if(lastUrgence?.id_utilisateur === urgences[i]?.id_utilisateur){
+        console.log("else if");
+        console.log(`bonjour , votre rendez-vous Mr l'utilisateur ${utilisateur.prenom} ${utilisateur.nom} est prevu pour le ${dateNormaleRdv} `);
+        emailData = {
+      
+          to: utilisateur.courriel,
+          subject: `rendez-vous d'urgence`,
+          html: `
+          <div >
+            <img src="https://i.pinimg.com/236x/40/1a/46/401a463bbcdd588d251dfc7655fd1cfc.jpg" alt="Logo" style="width: 200px; height: 100px;">
+            <p>Bonjour ${utilisateur.prenom} ${utilisateur.nom},</p>
+            <p>Votre rendez-vous est prevu pour le ${dateNormaleRdv}</p>
+            <p>Veuillez noter que ceci est juste une version d'essai et que tout rendez-vous est juste une simulation.</p>
+          </div>
+        `
+        };
+
+    
+        await sendEmail(emailData);
+      }
+      console.log(emailData);
+
+
+
+
+
+
     }
   }
 };
-
 
 
 export const assignRdv = async (id_utilisateur) => {
   let connexion = await promesseConnexion;
   let lastRdv = await connexion.get(
     `SELECT MAX(date_rendez_vous) AS last_rdv_date FROM rendez_vous `
- 
+
   );
 
-  console.log("last rdv est ",lastRdv.last_rdv_date)
+
 
   let newRdvDate;
   //si le rdv il n<existe pas ou le dernier rdv date de plus de 10 minutes en arriere 
   //pour pouvoir donner au patient le temps de se rendre a l hopital 
-  if (lastRdv.last_rdv_date == null || (Date.now() - new Date(lastRdv.last_rdv_date) > 10 * 60 * 1000) ) {
+  if (lastRdv.last_rdv_date == null || (Date.now() - new Date(lastRdv.last_rdv_date) > 10 * 60 * 1000)) {
     newRdvDate = new Date(Date.now() + 30 * 60 * 1000);
+
+
   } else {
+
+
     newRdvDate = new Date(lastRdv.last_rdv_date);
     newRdvDate.setMinutes(newRdvDate.getMinutes() + 30);
+
   }
 
   await connexion.run(
@@ -111,31 +277,28 @@ export const assignRdv = async (id_utilisateur) => {
   );
 
 
-   await updateRDVuser();
+  await updateRDVuser();
 
 }
 
 
 
-
-
-
-
-export const addUrgence = async (niveauUrgence, pointsUrgence, id_utilisateur) => {
-  await updateEtatUrgence();
-
+export const checkUrgenceEnCours = async (id_utilisateur) => {
   let connexion = await promesseConnexion;
-  let dateUrgence = new Date(Date.now());
+  try {
 
-
-  await connexion.run(
-    `INSERT INTO urgence (id_utilisateur, niveau_urgence, points_urgence, date_urgence, etat_urgence)
-        VALUES(?,?,?,?,?)`,
-    [id_utilisateur, niveauUrgence, pointsUrgence, dateUrgence, 1]
-  );
-
-  await assignRdv(id_utilisateur);
+    const result = await connexion.get(
+      `SELECT COUNT(*) as count FROM urgence WHERE id_utilisateur = ? AND etat_urgence = 1`,
+      [id_utilisateur]
+    );
+    return result.count;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
+
+
 
 export const addFormulaire =async (id_user,id_urgence,data)=>{
   let connexion = await promesseConnexion;
@@ -146,3 +309,26 @@ export const addFormulaire =async (id_user,id_urgence,data)=>{
       [id_user,id_urgence, data.date_debut_symptomes, data.description, data.symptomes, data.medical_condition, data.hospital_history, data.medication_history, data.last_meal, data.tete_gauche[0], data.tete_droite[0], data.cou_gauche[0], data.cou_droite[0], data.epaule_gauche[0], data.epaule_droite[0], data.poitrine_gauche[0], data.poitrine_droite[0], data.coude_gauche[0], data.coude_droite[0], data.main_et_poignet_gauche[0], data.main_et_poignet_droit[0], data.hanche_gauche[0], data.hanche_droite[0], data.cuisse_gauche[0], data.cuisse_droite[0], data.genou_gauche[0], data.genou_droit[0], data.jambe_gauche[0], data.jambe_droite[0], data.pied_gauche[0], data.pied_droite[0], data.douleur_present, data.douleur8jours, data.douleur_intense]
   )
 }
+
+
+
+export const addUrgence = async (niveauUrgence, pointsUrgence, id_utilisateur) => {
+  await updateEtatUrgence();
+
+  let connexion = await promesseConnexion;
+  let dateUrgence = new Date(Date.now());
+
+
+
+  await connexion.run(
+    `INSERT INTO urgence (id_utilisateur, niveau_urgence, points_urgence, date_urgence, etat_urgence)
+        VALUES(?,?,?,?,?)`,
+    [id_utilisateur, niveauUrgence, pointsUrgence, dateUrgence, 1]
+  );
+
+  await assignRdv(id_utilisateur);
+
+
+
+}
+

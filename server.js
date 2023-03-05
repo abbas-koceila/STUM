@@ -20,9 +20,11 @@ import bodyParser from 'body-parser';
 
 import middlewareSse from './middleware-sse.js';
 import './authentification.js'
+
 import { addPatient,getPatient, getFormulaire } from './model/utilisateur.js';
-import { addUrgence,addFormulaire,getId_Urgence } from './model/stum.js';
+import { addUrgence,addFormulaire,getId_Urgence,checkUrgenceEnCours } from './model/stum.js';
 import { calculNiveauUrgence, calculScore } from './model/urgence.js'
+
 
 // Création de la base de données de session
 const MemoryStore = memorystore(session);
@@ -47,11 +49,14 @@ app.use(session({
     secret: process.env.SESSION_SECRET
 }));
 
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(express.json());
+
 
 
 // Ajouter les routes ici ...
@@ -80,6 +85,7 @@ app.get('/Admin', async (request, response) => {
     //     response.status(403).end();
     // }
     // else {
+
         let patients = await getPatient();
         let data = [];
         patients.forEach(async patient => {
@@ -102,6 +108,7 @@ app.get('/Admin', async (request, response) => {
             admin :request.user.id_type_utilisateur == 2,
             patient:data
         });
+
     //}
 });
 app.get('/modification/:id', async (request, response) => {
@@ -229,29 +236,41 @@ app.post('/connexion', (request, response, next) => {
 app.post('/addUrgence', async (req, res) => {
 
     const data = req.body;
-    let id_user=req.user.id_utilisateur;
+     let id_user = req.user.id_utilisateur;
 
-    console.log(id_user);
-   
+    console.log("user id",id_user);
+
 
     let point_urgence = await calculScore(data);
-    console.log(point_urgence);
+    console.log("point_urgence: ",point_urgence);
     let niveau_urgence = await calculNiveauUrgence(point_urgence);
+    console.log('checkUrgenceEnCours', await checkUrgenceEnCours(id_user));
+    if (await checkUrgenceEnCours(id_user) < 1) {
+        try {
+            console.log('whyyyyyyyy');
+            await addUrgence(niveau_urgence, point_urgence, id_user)
+            res.status(200).end();
 
-    try {
-        await addUrgence(niveau_urgence, point_urgence,id_user)
-    
-        res.status(200).json({ message: 'Emergency added' });
-    } catch (error) {
-        console.error(error);
-        if (error.code === 'SQLITE_CONSTRAINT') {
-            res.status(409).json({ message: 'Error while adding emergency' });
-        } else {
-           // next(error);
-           console.error(error);
+        } catch (error) {
+            console.error(error);
+            if (error.code === 'SQLITE_CONSTRAINT') {
+                res.status(409).json({ message: 'Error while adding emergency' });
+            } else {
+                // next(error);
+                console.log('pas ajoute');
+                console.error(error);
+            }
         }
     }
-    });
+    else {
+        res.status(400).end();
+    }
+
+});
+
+
+
+
     
     
 app.post('/addFormulaire', async (req, res) => {
@@ -291,7 +310,7 @@ app.post('/addFormulaire', async (req, res) => {
     
     
     
-    
+
 
 
 
@@ -376,6 +395,7 @@ app.get('/rdvFutur', async (request, response) => {
 
     });
 });
+
 
 
 // Renvoyer une erreur 404 pour les routes non définies
