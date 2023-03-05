@@ -8,15 +8,23 @@ import helmet from 'helmet';
 import compression from 'compression';
 import session from 'express-session';
 import memorystore from 'memorystore';
-import { getHikes, addHike, deleteHike, getInscription, getMyHikes, inscrireHike, desinscrireHike } from './model/hike.js';
-//import calculScore from './public/js/emergency_form';
+
+
 import cors from 'cors';
 import cspOption from './csp-options.js';
-import { validateForm } from './validations.js';
+
 import passport from 'passport';
+
+
+import bodyParser from 'body-parser';
+
 import middlewareSse from './middleware-sse.js';
 import './authentification.js'
-import { addUtilisateur } from './model/utilisateur.js';
+import { addPatient } from './model/utilisateur.js';
+import { addUrgence, checkUrgenceEnCours } from './model/stum.js';
+import { calculNiveauUrgence, calculScore } from './model/urgence.js'
+
+
 
 // Création de la base de données de session
 const MemoryStore = memorystore(session);
@@ -27,6 +35,7 @@ app.engine('handlebars', expressHandlebars());
 app.set('view engine', 'handlebars');
 
 // Ajout de middlewares
+app.use(bodyParser.json());
 app.use(helmet(cspOption));
 app.use(compression());
 app.use(cors());
@@ -40,10 +49,15 @@ app.use(session({
     secret: process.env.SESSION_SECRET
 }));
 
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(urlencoded({ extended: false }));
 app.use(express.static('public'));
+app.use(express.json());
+
+
 
 
 // Ajouter les routes ici ...
@@ -55,7 +69,7 @@ app.get('/', async (request, response) => {
             scripts: ['/js/home.js'],
             acceptCookie: request.session.accept,
             user: request.user,
-            admin :request.user.id_type_utilisateur == 2, 
+            admin: request.user.id_type_utilisateur == 2,
         });
     }
     else {
@@ -72,16 +86,16 @@ app.get('/Admin', async (request, response) => {
     //     response.status(403).end();
     // }
     // else {
-        response.render('index', {
-            title: 'index',
-            styles: ['/css/Infirmier.css'],
-            styles: ['/css/style.css'],
-            scripts: ['/js/Admin.js'],
-            acceptCookie: request.session.accept,
-            user: request.user,
-            admin :request.user.id_type_utilisateur == 2, 
+    response.render('index', {
+        title: 'index',
+        styles: ['/css/Infirmier.css'],
+        styles: ['/css/style.css'],
+        scripts: ['/js/Admin.js'],
+        acceptCookie: request.session.accept,
+        user: request.user,
+        admin: request.user.id_type_utilisateur == 2,
 
-        });
+    });
     //}
 });
 app.get('/modification', (request, response) => {
@@ -112,8 +126,8 @@ app.get('/connexion', (request, response) => {
         acceptCookie: request.session.accept,
         user: request.user,
         count: request.session.accept,
-       
-    
+
+
     });
 });
 app.get('/inscription', (request, response) => {
@@ -128,20 +142,20 @@ app.get('/inscription', (request, response) => {
 
 
 app.get('/patient', async (request, response) => {
-     if (request.user) {
-    response.render('patient', {
-        title: 'Page d\'accueil',
-        styles: ['/css/style.css'],
+    if (request.user) {
+        response.render('patient', {
+            title: 'Page d\'accueil',
+            styles: ['/css/style.css'],
 
-        acceptCookie: request.session.accept,
-        user: request.user,
-        admin :request.user.id_type_utilisateur == 2,
-    
+            acceptCookie: request.session.accept,
+            user: request.user,
+            admin: request.user.id_type_utilisateur == 2,
 
 
-    });
-    console.log(request.user)
-}
+
+        });
+        console.log(request.user)
+    }
     else {
         response.redirect('/Connexion');
     }
@@ -156,7 +170,7 @@ app.post('/inscription', async (request, response, next) => {
 
     if (true) {
         try {
-            await addUtilisateur(request.body.nomUtilisateur, request.body.motDePasse, request.body.courriel, request.body.nom, request.body.prenom);
+            await addPatient(request.body.nomUtilisateur, request.body.nom, request.body.prenom, request.body.courriel, request.body.motDePasse, request.body.numeroCarteSante, request.body.numeroTel);
             response.status(200).end();
         }
         catch (error) {
@@ -188,7 +202,7 @@ app.post('/connexion', (request, response, next) => {
                         next(error);
                     } else {
                         response.status(200).end();
-                      
+
                     }
                 })
             }
@@ -198,23 +212,49 @@ app.post('/connexion', (request, response, next) => {
     }
 });
 
-// pas encore fonctionelle .
 
-app.post('/formulaire', async (req, res) => {
 
-    // Get the form data from the request body
-    const formData = req.body;
-  
-    // Select only the checked inputs from the form data
-    const selectedInputs = formData.filter(input => input.checked);
-  
-    // Calculate the total score
-    const totalScore = await calculScore(selectedInputs);
-    
-    console.log(totalScore);
-    // Send the total score back to the client
-    res.send({ totalScore });
-  });
+app.post('/addUrgence', async (req, res) => {
+
+    const data = req.body;
+    let id_user = req.user.id_utilisateur;
+
+    console.log("user id",id_user);
+
+
+    let point_urgence = await calculScore(data);
+    console.log("point_urgence: ",point_urgence);
+    let niveau_urgence = await calculNiveauUrgence(point_urgence);
+    console.log('checkUrgenceEnCours', await checkUrgenceEnCours(id_user));
+    if (await checkUrgenceEnCours(id_user) < 1) {
+        try {
+            console.log('whyyyyyyyy');
+            await addUrgence(niveau_urgence, point_urgence, id_user)
+            res.status(200).end();
+
+        } catch (error) {
+            console.error(error);
+            if (error.code === 'SQLITE_CONSTRAINT') {
+                res.status(409).json({ message: 'Error while adding emergency' });
+            } else {
+                // next(error);
+                console.log('pas ajoute');
+                console.error(error);
+            }
+        }
+    }
+    else {
+        res.status(400).end();
+    }
+
+});
+
+
+
+
+
+
+
 
 app.post('/deconnexion', (request, response, next) => {
     request.logOut((error) => {
@@ -227,76 +267,77 @@ app.post('/deconnexion', (request, response, next) => {
 });
 
 //AJOUT DE PHILLIPE 
-app.get('/formulaire',async (request, response) => {
+app.get('/formulaire', async (request, response) => {
     if (request.user) {
-     response.render('formulaire', {
-        title: 'formulaire',
-        styles: ['/css/style.css'], 
-        scripts: ['/js/emergency_form.js'],
-        acceptCookie: request.session.accept,
-        user: request.user,
-        admin :request.user.id_type_utilisateur == 2,
-    
-       
-        
-    });
-}
-else {
-    response.redirect('/Connexion');
-}
+        response.render('formulaire', {
+            title: 'formulaire',
+            styles: ['/css/style.css'],
+            scripts: ['/js/emergency_form.js'],
+            acceptCookie: request.session.accept,
+            user: request.user,
+            admin: request.user.id_type_utilisateur == 2,
+
+
+
+        });
+    }
+    else {
+        response.redirect('/Connexion');
+    }
 });
 
-app.get('/changeInfo',async (request, response) => {
+app.get('/changeInfo', async (request, response) => {
     response.render('changeInfo', {
         title: 'Page d\'accueil',
-        styles: ['/css/style.css'], 
+        styles: ['/css/style.css'],
         scripts: ['/js/formulaire.js'],
         acceptCookie: request.session.accept,
         user: request.user,
-        admin :request.user.id_type_utilisateur == 2,
-       
-        
+        admin: request.user.id_type_utilisateur == 2,
+
+
     });
 });
 
-app.get('/annuler',async (request, response) => {
+app.get('/annuler', async (request, response) => {
     response.render('annuler', {
         title: 'Page d\'accueil',
-        styles: ['/css/style.css'], 
+        styles: ['/css/style.css'],
         scripts: ['/js/formulaire.js'],
         acceptCookie: request.session.accept,
         user: request.user,
-        admin :request.user.id_type_utilisateur == 2,
-       
-        
+        admin: request.user.id_type_utilisateur == 2,
+
+
     });
 });
 
-app.get('/rdvPasse',async (request, response) => {
+app.get('/rdvPasse', async (request, response) => {
     response.render('rdvPasse', {
         title: 'Page d\'accueil',
-        styles: ['/css/style.css'], 
-        scripts: ['/js/formulaire.js'], 
-           acceptCookie: request.session.accept,
-        user: request.user,
-        admin :request.user.id_type_utilisateur == 2,
-       
-        
-    });
-});
-
-app.get('/rdvFutur',async (request, response) => {
-    response.render('rdvFutur', {
-        title: 'Page d\'accueil',
-        styles: ['/css/style.css'], 
+        styles: ['/css/style.css'],
         scripts: ['/js/formulaire.js'],
         acceptCookie: request.session.accept,
         user: request.user,
-        admin :request.user.id_type_utilisateur == 2,
-       
-        
+        admin: request.user.id_type_utilisateur == 2,
+
+
     });
 });
+
+app.get('/rdvFutur', async (request, response) => {
+    response.render('rdvFutur', {
+        title: 'Page d\'accueil',
+        styles: ['/css/style.css'],
+        scripts: ['/js/formulaire.js'],
+        acceptCookie: request.session.accept,
+        user: request.user,
+        admin: request.user.id_type_utilisateur == 2,
+
+
+    });
+});
+
 
 
 // Renvoyer une erreur 404 pour les routes non définies
