@@ -50,7 +50,7 @@ export const sendEmail= async(emaildata)=> {
       return 'Email sent successfully';
       
   } catch (err) {
-      console.error(err);
+      console.error(" catch erreur envoi",err);
       throw new Error('Failed to send email');
   }
 }
@@ -173,6 +173,7 @@ export const updateRDVuser = async () => {
               </div>
             `
           };
+          await sendEmail(emailData);
 
         }
 
@@ -193,8 +194,10 @@ export const updateRDVuser = async () => {
             `
           };
 
+          await sendEmail(emailData);
+
         }
-        console.log(emailData);
+     
 
  
       }
@@ -218,10 +221,10 @@ export const updateRDVuser = async () => {
         };
 
     
-     
+        await sendEmail(emailData);
       }
+      console.log(emailData);
 
-       await sendEmail(emailData);
 
 
 
@@ -309,4 +312,3 @@ export const addUrgence = async (niveauUrgence, pointsUrgence, id_utilisateur) =
 
 
 }
-
