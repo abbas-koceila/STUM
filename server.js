@@ -20,10 +20,10 @@ import bodyParser from 'body-parser';
 
 import middlewareSse from './middleware-sse.js';
 import './authentification.js'
-import { addPatient } from './model/utilisateur.js';
-import { addUrgence, checkUrgenceEnCours } from './model/stum.js';
-import { calculNiveauUrgence, calculScore } from './model/urgence.js'
 
+import { addPatient,getPatient, getFormulaire } from './model/utilisateur.js';
+import { addUrgence,addFormulaire,getId_Urgence,checkUrgenceEnCours } from './model/stum.js';
+import { calculNiveauUrgence, calculScore } from './model/urgence.js'
 
 
 // Création de la base de données de session
@@ -59,7 +59,6 @@ app.use(express.json());
 
 
 
-
 // Ajouter les routes ici ...
 app.get('/', async (request, response) => {
     if (request.user) {
@@ -86,26 +85,46 @@ app.get('/Admin', async (request, response) => {
     //     response.status(403).end();
     // }
     // else {
-    response.render('index', {
-        title: 'index',
-        styles: ['/css/Infirmier.css'],
-        styles: ['/css/style.css'],
-        scripts: ['/js/Admin.js'],
-        acceptCookie: request.session.accept,
-        user: request.user,
-        admin: request.user.id_type_utilisateur == 2,
 
-    });
+        let patients = await getPatient();
+        let data = [];
+        patients.forEach(async patient => {
+            data.push({
+                nom: patient.nom,
+                prenom: patient.prenom,
+                date_urgence: patient.date_urgence,
+                niveau_urgence: patient.niveau_urgence,
+                date_rendez_vous :patient.date_rendez_vous,
+                id_utilisateur:patient.id_utilisateur
+            });
+        })
+        response.render('index', {
+            title: 'index',
+            styles: ['/css/Infirmier.css'],
+            styles: ['/css/style.css'],
+            scripts: ['/js/Admin.js'],
+            acceptCookie: request.session.accept,
+            user: request.user,
+            admin :request.user.id_type_utilisateur == 2,
+            patient:data
+        });
+
     //}
 });
-app.get('/modification', (request, response) => {
+app.get('/modification/:id', async (request, response) => {
+    let id_user=request.params.id;
+    console.log("athaya: "+id_user);
+    let data = await getFormulaire(id_user);
+    
+   console.log(data);
     response.render('modification', {
-        styles: ['/css/Infirmier.css'],
         styles: ['/css/style.css'],
-        scripts: ['/js/Admin.js'],
+        
+        scripts: ['/js/modification.js'],
         acceptCookie: request.session.accept,
         user: request.user,
-        count: request.session.accept
+        count: request.session.accept,
+       data: data[0]
     });
 });
 app.get('/home', (request, response) => {
@@ -217,7 +236,7 @@ app.post('/connexion', (request, response, next) => {
 app.post('/addUrgence', async (req, res) => {
 
     const data = req.body;
-    let id_user = req.user.id_utilisateur;
+     let id_user = req.user.id_utilisateur;
 
     console.log("user id",id_user);
 
@@ -252,6 +271,45 @@ app.post('/addUrgence', async (req, res) => {
 
 
 
+    
+    
+app.post('/addFormulaire', async (req, res) => {
+    
+    const data = req.body;
+    let id_user=req.user.id_utilisateur;
+    let id_urgence;
+    try {
+         let id_urgence_JSON = await getId_Urgence(id_user)
+         let id_urgence_temp = JSON.stringify(id_urgence_JSON);
+         id_urgence=id_urgence_temp.id_urgence;
+         console.log("id_urgence : "+id_urgence);
+    } catch (error) {
+        console.error(error);
+        if (error.code === 'SQLITE_CONSTRAINT') {
+            res.status(409).json({ message: 'Error while getting id_urgence from getId_Urgence(id_user)' });
+        } else {
+        // next(error);
+        console.error(error);
+        }
+    }
+
+    try {
+        await addFormulaire(id_user,id_urgence,data)
+    
+        res.status(200).json({ message: 'Emergency added' });
+    } catch (error) {
+        console.error(error);
+        if (error.code === 'SQLITE_CONSTRAINT') {
+            res.status(409).json({ message: 'Error while adding emergency' });
+        } else {
+           // next(error);
+           console.error(error);
+        }
+    }
+    });
+    
+    
+    
 
 
 
