@@ -119,7 +119,6 @@ app.get('/modification/:id', async (request, response) => {
    console.log(data);
     response.render('modification', {
         styles: ['/css/style.css'],
-        
         scripts: ['/js/modification.js'],
         acceptCookie: request.session.accept,
         user: request.user,
@@ -345,6 +344,8 @@ app.get('/formulaire', async (request, response) => {
 });
 
 app.get('/changeInfo', async (request, response) => {
+    let id_user=request.user.id_utilisateur;
+    let data = await getFormulaire(id_user);
     response.render('changeInfo', {
         title: 'Page d\'accueil',
         styles: ['/css/style.css'],
@@ -352,6 +353,7 @@ app.get('/changeInfo', async (request, response) => {
         acceptCookie: request.session.accept,
         user: request.user,
         admin: request.user.id_type_utilisateur == 2,
+        data:data[0]
 
 
     });
