@@ -58,7 +58,7 @@ const createDatabase = async (connectionPromise) => {
         );
 
         CREATE TABLE IF NOT EXISTS urgence(
-            id_utilisateur INTEGER NOT NULL UNIQUE,
+           id_utilisateur INTEGER NOT NULL ,
             id_urgence INTEGER PRIMARY KEY AUTOINCREMENT,
             id_rendez_vous INTEGER,
             niveau_urgence INTEGER NOT NULL,
@@ -73,10 +73,10 @@ const createDatabase = async (connectionPromise) => {
                 ON UPDATE CASCADE
 
             CONSTRAINT fk_id_rendez_vous
-                FOREIGN KEY (id_rendez_vous)
-                REFERENCES rendez_vous(id_rendez_vous)
-                ON DELETE SET NULL
-                ON UPDATE CASCADE
+FOREIGN KEY (id_rendez_vous)
+            REFERENCES rendez_vous(id_rendez_vous)
+            ON DELETE SET NULL
+            ON UPDATE CASCADE
         );
 
         CREATE TABLE IF NOT EXISTS rendez_vous(
@@ -89,7 +89,7 @@ const createDatabase = async (connectionPromise) => {
                 ON DELETE SET NULL
                 ON UPDATE CASCADE
         );
-        CREATE TABLE formulaire (
+ CREATE TABLE formulaire (
             id_utilisateur INTEGER NOT NULL UNIQUE,
             id_urgence INTEGER PRIMARY KEY,
             date_debut_symptomes DATE,
