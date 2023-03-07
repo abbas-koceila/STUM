@@ -32,13 +32,9 @@ export const getId_Urgence = async (id_user) => {
 export const sendEmail= async(emaildata)=> {
 
   const transporter = nodemailer.createTransport({
-      host: 'smtp-mail.outlook.com',                  // hostname
-      service: 'outlook',                             // service name
-      secureConnection: false,
-      tls: {
-          ciphers: 'SSLv3'                            // tls version
-      },
-      port: 587,
+ 
+    service:'gmail',
+ 
       auth: {
           user: process.env.USEREMAIL,
           pass: process.env.PASSEMAIL,
@@ -47,7 +43,7 @@ export const sendEmail= async(emaildata)=> {
 
   try {
       let info = await transporter.sendMail({
-          from:  'STUM <stum.rdv@outlook.com>',
+          from:  'STUM <stum.rdv@gmail.com>',
           to: emaildata.to,
           subject: emaildata.subject,
           html: emaildata.html,
@@ -116,7 +112,7 @@ export const updateRDVuser = async () => {
        ORDER BY points_urgence DESC`
   );
 
-
+  const emailsPromises = [];
   // update rdv   et comparer entre l<ancien et le nouveau rdv pour les notifications
   if (rdvs && rdvs.length > 0) {
     for (let i = 0; i < utilisateurs.length; i++) {
@@ -177,14 +173,14 @@ export const updateRDVuser = async () => {
             subject: `rendez-vous d'urgence`,
             html: `
               <div >
-                <img src="https://i.pinimg.com/236x/40/1a/46/401a463bbcdd588d251dfc7655fd1cfc.jpg" alt="Logo" style="width: 200px; height: 100px;">
+               
                 <p>Bonjour ${utilisateur.prenom} ${utilisateur.nom},</p>
                 <p> Votre rendez-vous est prevu pour le ${dateNormaleRdv} .</p>
                 <p>Veuillez noter que ceci est juste une version d'essai et que tout rendez-vous est juste une simulation.</p>
               </div>
             `
           };
-          await sendEmail(emailData);
+          emailsPromises.push(sendEmail(emailData));
 
         }
 
@@ -197,15 +193,14 @@ export const updateRDVuser = async () => {
             subject: `rendez-vous d'urgence`,
             html: `
               <div>
-                <img src="https://i.pinimg.com/236x/40/1a/46/401a463bbcdd588d251dfc7655fd1cfc.jpg" alt="Logo" style="width: 200px; height: 100px;">
+               
                 <p>Bonjour ${utilisateur.prenom} ${utilisateur.nom},</p>
                 <p>Votre rendez-vous a été mis à jour. Le nouveau rendez-vous est prévu pour ${dateNormaleRdv}.</p>
                 <p>Veuillez noter que ceci est juste une version d'essai et que tout rendez-vous est juste une simulation.</p>
               </div>
             `
           };
-
-          await sendEmail(emailData);
+          emailsPromises.push(sendEmail(emailData));
 
         }
      
@@ -223,7 +218,7 @@ export const updateRDVuser = async () => {
           subject: `rendez-vous d'urgence`,
           html: `
           <div >
-            <img src="https://i.pinimg.com/236x/40/1a/46/401a463bbcdd588d251dfc7655fd1cfc.jpg" alt="Logo" style="width: 200px; height: 100px;">
+           
             <p>Bonjour ${utilisateur.prenom} ${utilisateur.nom},</p>
             <p>Votre rendez-vous est prevu pour le ${dateNormaleRdv}</p>
             <p>Veuillez noter que ceci est juste une version d'essai et que tout rendez-vous est juste une simulation.</p>
@@ -232,7 +227,7 @@ export const updateRDVuser = async () => {
         };
 
     
-        await sendEmail(emailData);
+        emailsPromises.push(sendEmail(emailData));
       }
       console.log(emailData);
 
@@ -242,6 +237,29 @@ export const updateRDVuser = async () => {
 
 
     }
+// send all emails asynchronously and continue with program execution
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+
+// il envois un email chaque 10 secondes pour eviter limit exeeded
+
+async function sendEmails() {
+  for (let i = 0; i < emailsPromises.length; i++) {
+    const timestamp = Date.now();
+    console.log(`Sending email ${i} at ${timestamp} ms`);
+    await delay(10000); // 10 second delay
+    try {
+      await emailsPromises[i];
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  }
+  console.log('All emails sent successfully');
+}
+
+sendEmails();
+
+
   }
 };
 
@@ -328,7 +346,42 @@ export const addUrgence = async (niveauUrgence, pointsUrgence, id_utilisateur) =
 
   await assignRdv(id_utilisateur);
 
+ 
+
 
 
 }
+
+
+
+
+
+
+ 
+export const getRdvFutur = async (id_Utilisateur) => {
+  let connexion = await promesseConnexion;
+
+  try {
+    let RdvFutur = await connexion.all(
+      `SELECT  * FROM rendez_vous RV INNER JOIN urgence U ON RV.id_utilisateur = U.id_utilisateur WHERE etat_urgence = 1 AND U.id_utilisateur = ?`,
+      [id_Utilisateur]
+    );
+
+        // Convertir la date en format LocalDate string
+        RdvFutur = RdvFutur.map((rdv) => {
+          const dateRdv = new Date(rdv.date_rendez_vous);
+          rdv.date_rendez_vous = dateRdv.toLocaleString();
+          return rdv;
+        });
+  
+  
+    return RdvFutur;
+  }
+  catch (error) {
+    console.log(error);
+    return null;
+  }
+  
+}
+
 

@@ -22,7 +22,7 @@ import middlewareSse from './middleware-sse.js';
 import './authentification.js'
 
 import { addPatient,getPatient, getFormulaire } from './model/utilisateur.js';
-import { addUrgence,addFormulaire,getId_Urgence,checkUrgenceEnCours } from './model/stum.js';
+import { getRdvFutur,addUrgence,addFormulaire,getId_Urgence,checkUrgenceEnCours } from './model/stum.js';
 import { calculNiveauUrgence, calculScore } from './model/urgence.js'
 
 
@@ -391,7 +391,7 @@ app.get('/rdvFutur', async (request, response) => {
         acceptCookie: request.session.accept,
         user: request.user,
         admin: request.user.id_type_utilisateur == 2,
-
+        rdv: await getRdvFutur(request.user.id_utilisateur)
 
     });
 });
