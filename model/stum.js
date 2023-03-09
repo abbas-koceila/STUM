@@ -15,6 +15,7 @@ export const getUrgences = async () => {
 
   return resultat;
 
+
 }
 
 export const getId_Urgence = async (id_user) => {
@@ -26,7 +27,6 @@ export const getId_Urgence = async (id_user) => {
   return resultat;
 
 }
-
 
 
 export const sendEmail= async(emaildata)=> {
@@ -383,5 +383,3 @@ export const getRdvFutur = async (id_Utilisateur) => {
   }
   
 }
-
-
