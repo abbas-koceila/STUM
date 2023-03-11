@@ -54,6 +54,8 @@ formUrgence.addEventListener('submit', async (event) => {
       window.alert('Vous avez déjà  une demande d\'urgence en cours');
   
     }
+
+    
   }
   else if (res.status === 409) {
     console.log('Vous avez déjà créé un form d\'urgence. Vous ne pouvez pas en créer un autre.');
