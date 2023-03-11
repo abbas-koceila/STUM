@@ -23,9 +23,8 @@ import './authentification.js'
 
 import { addPatient,getPatient, getFormulaire } from './model/utilisateur.js';
 
-import { getRdvFutur,addUrgence,addFormulaire,getId_Urgence,checkUrgenceEnCours } from './model/stum.js';
+import { deleteEmergency,getRdvFutur,addUrgence,addFormulaire,getId_Urgence,checkUrgenceEnCours } from './model/stum.js';
 
-import { addUrgence,addFormulaire,getId_Urgence,checkUrgenceEnCours } from './model/stum.js';
 
 import { calculNiveauUrgence, calculScore } from './model/urgence.js'
 
@@ -251,7 +250,7 @@ app.post('/addUrgence', async (req, res) => {
     console.log('checkUrgenceEnCours', await checkUrgenceEnCours(id_user));
     if (await checkUrgenceEnCours(id_user) < 1) {
         try {
-            console.log('whyyyyyyyy');
+           
             await addUrgence(niveau_urgence, point_urgence, id_user)
             res.status(200).end();
 
@@ -364,19 +363,20 @@ app.get('/changeInfo', async (request, response) => {
     });
 });
 
-app.get('/annuler', async (request, response) => {
-    response.render('annuler', {
-        title: 'Page d\'accueil',
-        styles: ['/css/style.css'],
-        scripts: ['/js/formulaire.js'],
-        acceptCookie: request.session.accept,
-        user: request.user,
-        admin: request.user.id_type_utilisateur == 2,
 
-
-    });
+app.delete('/deleterdv', async (request, response) => {
+    if (!request.user) {
+        response.status(401).send({ error: "Unauthorized" });
+    } else {
+        try {
+            await deleteEmergency(request.body.id);
+            response.status(200).send({ message: "Rdv deleted successfully" });
+        } catch (error) {
+            console.error(error);
+            response.status(500).send({ error: "Internal server error" });
+        }
+    }
 });
-
 app.get('/rdvPasse', async (request, response) => {
     response.render('rdvPasse', {
         title: 'Page d\'accueil',
@@ -394,7 +394,7 @@ app.get('/rdvFutur', async (request, response) => {
     response.render('rdvFutur', {
         title: 'Page d\'accueil',
         styles: ['/css/style.css'],
-        scripts: ['/js/formulaire.js'],
+        scripts: ['/js/urgence.js'],
         acceptCookie: request.session.accept,
         user: request.user,
         admin: request.user.id_type_utilisateur == 2,

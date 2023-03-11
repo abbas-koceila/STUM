@@ -1,6 +1,7 @@
 
 import { promesseConnexion } from './connexion.js';
 import { getUtilisateurById } from './utilisateur.js';
+import { getUrgenceValidByIdUser } from './urgence.js';
 
 //send email
 import nodemailer from "nodemailer";
@@ -22,43 +23,90 @@ export const getId_Urgence = async (id_user) => {
   let connexion = await promesseConnexion;
 
   let resultat = await connexion.all('SELECT id_urgence FROM urgence WHERE id_utilisateur= ? ',
-  [id_user]);
+    [id_user]);
 
   return resultat;
 
 }
 
+export const deleteEmergency = async (id_urgence) => {
+  let connexion = await promesseConnexion;
 
-export const sendEmail= async(emaildata)=> {
+
+  let rdvUrgence = await connexion.get(
+    `SELECT date_rendez_vous FROM rendez_vous WHERE id_urgence = ?`,
+    [id_urgence]);
+
+  if (rdvUrgence) {
+    let rdvDate = rdvUrgence.date_rendez_vous;
+    let nowDate = new Date();
+    let diffMinutes = Math.round((rdvDate - nowDate) / (1000 * 60)); // calculate the difference in minutes
+
+    if (diffMinutes > 25) {
+       
+
+      // recupere la date rendez vous de l'urgence supprimé
+      let daterdvsupprime =await connexion.get(
+        `SELECT date_rendez_vous FROM rendez_vous WHERE id_urgence = ?`,
+        [id_urgence]);
+
+        // updater le dernier rdv avec le rdv supprimé  puis faire un update de tous les rdv
+        await connexion.run(
+          `UPDATE rendez_vous SET date_rendez_vous = ? WHERE date_rendez_vous = (
+            SELECT MAX(date_rendez_vous) FROM rendez_vous
+          );`,[daterdvsupprime.date_rendez_vous]);
+
+      // delete the urgency and the last appointment in appoinment table 
+      await connexion.run(`DELETE FROM rendez_vous WHERE id_urgence = ?`, [id_urgence]);
+      await connexion.run(`DELETE FROM urgence WHERE id_urgence = ?`, [id_urgence]);
+
+      updateRDVuser();
+
+    }
+
+    else {
+      await connexion.run(`DELETE FROM urgence WHERE id_urgence = ?`, [id_urgence]);
+      await connexion.run(`DELETE FROM rendez_vous WHERE id_urgence = ?`, [id_urgence]);
+
+
+    }
+  }
+
+}
+
+
+
+
+export const sendEmail = async (emaildata) => {
 
   const transporter = nodemailer.createTransport({
- 
-    service:'gmail',
- 
-      auth: {
-          user: process.env.USEREMAIL,
-          pass: process.env.PASSEMAIL,
-      }
+
+    service: 'gmail',
+
+    auth: {
+      user: process.env.USEREMAIL,
+      pass: process.env.PASSEMAIL,
+    }
   });
 
   try {
-      let info = await transporter.sendMail({
-          from:  'STUM <stum.rdv@gmail.com>',
-          to: emaildata.to,
-          subject: emaildata.subject,
-          html: emaildata.html,
+    let info = await transporter.sendMail({
+      from: 'STUM <stum.rdv@gmail.com>',
+      to: emaildata.to,
+      subject: emaildata.subject,
+      html: emaildata.html,
 
-      });
-      console.log("Message sent: %s", info.messageId);
-      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-    
-      // Preview only available when sending through an Ethereal account
-      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-      return 'Email sent successfully';
-      
+    });
+    console.log("Message sent: %s", info.messageId);
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+    // Preview only available when sending through an Ethereal account
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    return 'Email sent successfully';
+
   } catch (err) {
-      console.error(" catch erreur envoi",err);
-      throw new Error('Failed to send email');
+    console.error(" catch erreur envoi", err);
+    throw new Error('Failed to send email');
   }
 }
 
@@ -132,7 +180,7 @@ export const updateRDVuser = async () => {
         `UPDATE rendez_vous SET date_rendez_vous = ? WHERE id_utilisateur = ?`,
         [rdvs[i]?.date_rendez_vous, urgences[i]?.id_utilisateur]
       );
-      
+
       // Récupérer le rendez-vous mis à jour
       let updatedrdv = await connexion.get(
         `SELECT id_rendez_vous, date_rendez_vous 
@@ -149,17 +197,17 @@ export const updateRDVuser = async () => {
       );
 
       let emailData;
-     //get user info
+      //get user info
       const utilisateur = await getUtilisateurById(urgences[i]?.id_utilisateur);
 
       const date = new Date(rdvs[i]?.date_rendez_vous);
       const dateNormaleRdv = date.toLocaleString();
 
       // Comparer les deux rendez-vous pour déterminer si l'ancien rendez-vous est différent du nouveau
-      
+
       if (oldrdv?.date_rendez_vous !== updatedrdv?.date_rendez_vous) {
 
-      
+
 
         //si le  premier rdv de l<utilisateur a ete updater des le premier coup 
 
@@ -168,7 +216,7 @@ export const updateRDVuser = async () => {
           console.log(`bonjour , votre rendez-vous Mr l'utilisateur${utilisateur.prenom} ${utilisateur.nom}est prevu pour le ${dateNormaleRdv} `);
           console.log(" if");
           emailData = {
-        
+
             to: utilisateur.courriel,
             subject: `rendez-vous d'urgence`,
             html: `
@@ -203,17 +251,17 @@ export const updateRDVuser = async () => {
           emailsPromises.push(sendEmail(emailData));
 
         }
-     
 
- 
+
+
       }
 
       // si le rdv de la derniere urgence n<est pas modifie   il envoi un courriell au patient
-      else if(lastUrgence?.id_utilisateur === urgences[i]?.id_utilisateur){
+      else if (lastUrgence?.id_utilisateur === urgences[i]?.id_utilisateur) {
         console.log("else if");
         console.log(`bonjour , votre rendez-vous Mr l'utilisateur ${utilisateur.prenom} ${utilisateur.nom} est prevu pour le ${dateNormaleRdv} `);
         emailData = {
-      
+
           to: utilisateur.courriel,
           subject: `rendez-vous d'urgence`,
           html: `
@@ -226,7 +274,7 @@ export const updateRDVuser = async () => {
         `
         };
 
-    
+
         emailsPromises.push(sendEmail(emailData));
       }
       console.log(emailData);
@@ -237,27 +285,27 @@ export const updateRDVuser = async () => {
 
 
     }
-// send all emails asynchronously and continue with program execution
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    // send all emails asynchronously and continue with program execution
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 
-// il envois un email chaque 10 secondes pour eviter limit exeeded
+    // il envois un email chaque 10 secondes pour eviter limit exeeded
 
-async function sendEmails() {
-  for (let i = 0; i < emailsPromises.length; i++) {
-    const timestamp = Date.now();
-    console.log(`Sending email ${i} at ${timestamp} ms`);
-    await delay(10000); // 10 second delay
-    try {
-      await emailsPromises[i];
-    } catch (error) {
-      console.error('Error sending email:', error);
+    async function sendEmails() {
+      for (let i = 0; i < emailsPromises.length; i++) {
+        const timestamp = Date.now();
+        console.log(`Sending email ${i} at ${timestamp} ms`);
+        await delay(10000); // 10 second delay
+        try {
+          await emailsPromises[i];
+        } catch (error) {
+          console.error('Error sending email:', error);
+        }
+      }
+      console.log('All emails sent successfully');
     }
-  }
-  console.log('All emails sent successfully');
-}
 
-sendEmails();
+    sendEmails();
 
 
   }
@@ -270,6 +318,8 @@ export const assignRdv = async (id_utilisateur) => {
     `SELECT MAX(date_rendez_vous) AS last_rdv_date FROM rendez_vous `
 
   );
+
+
 
 
 
@@ -288,10 +338,18 @@ export const assignRdv = async (id_utilisateur) => {
 
   }
 
+  let urgence = await connexion.get(
+    `SELECT id_urgence FROM urgence WHERE id_utilisateur = ? and etat_urgence = 1`,
+    [id_utilisateur]
+  );
+  let urgenceId = urgence.id_urgence;
+  console.log("wagi id urgence", urgenceId);
+
+
   await connexion.run(
-    `INSERT INTO rendez_vous (id_utilisateur, date_rendez_vous)
-     VALUES (?, ?)`,
-    [id_utilisateur, newRdvDate]
+    `INSERT INTO rendez_vous (id_utilisateur,id_urgence, date_rendez_vous)
+     VALUES (?, ?, ?)`,
+    [id_utilisateur, urgenceId, newRdvDate]
   );
 
 
@@ -318,13 +376,13 @@ export const checkUrgenceEnCours = async (id_utilisateur) => {
 
 
 
-export const addFormulaire =async (id_user,id_urgence,data)=>{
+export const addFormulaire = async (id_user, id_urgence, data) => {
   let connexion = await promesseConnexion;
 
   await connexion.run(
-      `INSERT INTO formulaire (id_utilisateur,id_urgence, date_debut_symptomes, description, symptomes, medical_condition, hospital_history, medication_history, last_meal, tete_gauche, tete_droite, cou_gauche, cou_droite, epaule_gauche, epaule_droite, poitrine_gauche, poitrine_droite, coude_gauche, coude_droite, main_et_poignet_gauche, main_et_poignet_droit, hanche_gauche, hanche_droite, cuisse_gauche, cuisse_droite, genou_gauche, genou_droit, jambe_gauche, jambe_droite, pied_gauche, pied_droite, douleur_present, douleur8jours, douleur_intense)
+    `INSERT INTO formulaire (id_utilisateur,id_urgence, date_debut_symptomes, description, symptomes, medical_condition, hospital_history, medication_history, last_meal, tete_gauche, tete_droite, cou_gauche, cou_droite, epaule_gauche, epaule_droite, poitrine_gauche, poitrine_droite, coude_gauche, coude_droite, main_et_poignet_gauche, main_et_poignet_droit, hanche_gauche, hanche_droite, cuisse_gauche, cuisse_droite, genou_gauche, genou_droit, jambe_gauche, jambe_droite, pied_gauche, pied_droite, douleur_present, douleur8jours, douleur_intense)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-      [id_user,id_urgence, data.date_debut_symptomes, data.description, data.symptomes, data.medical_condition, data.hospital_history, data.medication_history, data.last_meal, data.tete_gauche[0], data.tete_droite[0], data.cou_gauche[0], data.cou_droite[0], data.epaule_gauche[0], data.epaule_droite[0], data.poitrine_gauche[0], data.poitrine_droite[0], data.coude_gauche[0], data.coude_droite[0], data.main_et_poignet_gauche[0], data.main_et_poignet_droit[0], data.hanche_gauche[0], data.hanche_droite[0], data.cuisse_gauche[0], data.cuisse_droite[0], data.genou_gauche[0], data.genou_droit[0], data.jambe_gauche[0], data.jambe_droite[0], data.pied_gauche[0], data.pied_droite[0], data.douleur_present, data.douleur8jours, data.douleur_intense]
+    [id_user, id_urgence, data.date_debut_symptomes, data.description, data.symptomes, data.medical_condition, data.hospital_history, data.medication_history, data.last_meal, data.tete_gauche[0], data.tete_droite[0], data.cou_gauche[0], data.cou_droite[0], data.epaule_gauche[0], data.epaule_droite[0], data.poitrine_gauche[0], data.poitrine_droite[0], data.coude_gauche[0], data.coude_droite[0], data.main_et_poignet_gauche[0], data.main_et_poignet_droit[0], data.hanche_gauche[0], data.hanche_droite[0], data.cuisse_gauche[0], data.cuisse_droite[0], data.genou_gauche[0], data.genou_droit[0], data.jambe_gauche[0], data.jambe_droite[0], data.pied_gauche[0], data.pied_droite[0], data.douleur_present, data.douleur8jours, data.douleur_intense]
   )
 }
 
@@ -346,7 +404,7 @@ export const addUrgence = async (niveauUrgence, pointsUrgence, id_utilisateur) =
 
   await assignRdv(id_utilisateur);
 
- 
+
 
 
 
@@ -357,7 +415,7 @@ export const addUrgence = async (niveauUrgence, pointsUrgence, id_utilisateur) =
 
 
 
- 
+
 export const getRdvFutur = async (id_Utilisateur) => {
   let connexion = await promesseConnexion;
 
@@ -367,19 +425,19 @@ export const getRdvFutur = async (id_Utilisateur) => {
       [id_Utilisateur]
     );
 
-        // Convertir la date en format LocalDate string
-        RdvFutur = RdvFutur.map((rdv) => {
-          const dateRdv = new Date(rdv.date_rendez_vous);
-          rdv.date_rendez_vous = dateRdv.toLocaleString();
-          return rdv;
-        });
-  
-  
+    // Convertir la date en format LocalDate string
+    RdvFutur = RdvFutur.map((rdv) => {
+      const dateRdv = new Date(rdv.date_rendez_vous);
+      rdv.date_rendez_vous = dateRdv.toLocaleString();
+      return rdv;
+    });
+
+
     return RdvFutur;
   }
   catch (error) {
     console.log(error);
     return null;
   }
-  
+
 }

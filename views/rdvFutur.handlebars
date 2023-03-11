@@ -11,12 +11,16 @@
               <div class="card-body">
                 <h3 class="card-title">Rendez-vous medical</h3>
                 <h5>{{this.date_rendez_vous}}</h5>
-                <p class="card-text"></p>
+                <a href="https://www.google.com/maps/place/909+Bd+la+Vérendrye+O,+Gatineau,+QC+J8P+7H2,+Canada/" target="_blank"><h5 class="card-title">Hôpital de Gatineau</h5></a>
+           
+                <p class="card-text mt-1">Veuillez noter que ceci est juste une version d'essai
+                   et que tout rendez-vous est juste une simulation </p>
               </div>
               <div class="card-footer">
                  <div class="participants">
                  </div>
-                <button type="button" class="btn btn-primary mb-2 btn-lg btn-block" id="">Plus de details</button>
+               <button type="button" class="btn btn-danger mb-2 btn-lg btn-block rdvfutur" data-id="{{this.id_urgence}}">Annuler </button>
+
               </div>
             </div>  
         </div>
