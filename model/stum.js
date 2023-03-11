@@ -184,7 +184,7 @@ export const updateRDVuser = async () => {
               </div>
             `
           };
-          await sendEmail(emailData);
+         // await sendEmail(emailData);
 
         }
 
@@ -205,7 +205,7 @@ export const updateRDVuser = async () => {
             `
           };
 
-          await sendEmail(emailData);
+        //  await sendEmail(emailData);
 
         }
      
@@ -232,7 +232,7 @@ export const updateRDVuser = async () => {
         };
 
     
-        await sendEmail(emailData);
+      //  await sendEmail(emailData);
       }
       console.log(emailData);
 

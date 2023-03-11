@@ -113,3 +113,51 @@ export const getFormulaire=async (id_user)=>{
     return formulaire;
 }
 
+export const getCountReanimation =async ()=>{
+    let connexion = await promesseConnexion;
+
+   let countReanimation= await  connexion.get(
+        `SELECT count(*) FROM urgence
+        WHERE niveau_urgence = 1 AND etat_urgence = 1; ` 
+    );
+    return countReanimation;
+}
+export const getCountTresUrgent =async ()=>{
+    let connexion = await promesseConnexion;
+
+   let countTresUrgent= await  connexion.get(
+        `SELECT count(*) FROM urgence
+        WHERE niveau_urgence = 2 AND etat_urgence = 1; ` 
+    );
+    return countTresUrgent;
+}
+
+
+export const getCountUrgent =async ()=>{
+    let connexion = await promesseConnexion;
+
+   let countUrgent= await  connexion.get(
+        `SELECT count(*)  FROM urgence
+        WHERE niveau_urgence = 3 AND etat_urgence = 1; ` 
+    );
+    return countUrgent;
+}
+export const getCountMoinsUrgent =async ()=>{
+    let connexion = await promesseConnexion;
+
+   let countMoinsUrgent= await  connexion.get(
+        `SELECT count(*)  FROM urgence
+        WHERE niveau_urgence = 4 AND etat_urgence = 1; ` 
+    );
+    return countMoinsUrgent;
+}
+
+export const getCountNonUrgent =async ()=>{
+    let connexion = await promesseConnexion;
+
+   let countNonUrgent= await  connexion.get(
+        `SELECT count(*)  FROM urgence
+        WHERE (niveau_urgence = 5 OR niveau_urgence = 0)  AND etat_urgence = 1; ` 
+    );
+    return countNonUrgent;
+}

@@ -38,7 +38,7 @@
           <!-- textarea -->
           <div class="form-group">
             <label for="raison">Quelle est la raison de votre demande d'urgence ?</label>
-            <textarea class="form-control" rows="3" placeholder="raison" id="raison" name="raison" >{{data.description}}</textarea>
+            <textarea class="form-control" rows="3" placeholder="raison" id="raison" name="raison" >{{data.raison}}</textarea>
           </div>
 
           <!-- text input -->
@@ -49,7 +49,7 @@
 
           <!-- text input -->
           <div class="form-group">
-            <label for="description">Quelle est la raison de votre demande d'urgence ?</label>
+            <label for="description">Decrivez votre cas ?</label>
             <input type="text" class="form-control" placeholder="Entrez votre description ici" id="description" name="description" value="{{data.description}}">
           </div>
 
@@ -614,7 +614,7 @@
             </div>
             <!-- fin range -->
             <div class="btnform">
-              <button type="submit" class="btn btn-primary " id="add-submit"> Sauvgarder</button>
+              <button type="submit" class="btn btn-primary " id="add-submit"> Modifier</button>
             </div>
 
           </div>

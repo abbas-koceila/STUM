@@ -21,7 +21,7 @@ import bodyParser from 'body-parser';
 import middlewareSse from './middleware-sse.js';
 import './authentification.js'
 
-import { addPatient,getPatient, getFormulaire } from './model/utilisateur.js';
+import { addPatient,getPatient, getFormulaire, getCountReanimation, getCountMoinsUrgent, getCountTresUrgent, getCountUrgent, getCountNonUrgent } from './model/utilisateur.js';
 import { addUrgence,addFormulaire,getId_Urgence,checkUrgenceEnCours } from './model/stum.js';
 import { calculNiveauUrgence, calculScore } from './model/urgence.js'
 
@@ -86,6 +86,24 @@ app.get('/Admin', async (request, response) => {
     // }
     // else {
 
+        let reanimation = await getCountReanimation();
+        reanimation = JSON.stringify(reanimation["count(*)"]);
+        console.log(reanimation);
+
+        let countTresUrgent = await getCountTresUrgent();
+        countTresUrgent = JSON.stringify(countTresUrgent["count(*)"]);
+        console.log(countTresUrgent);
+
+        let countUrgent = await getCountUrgent();
+        countUrgent = JSON.stringify(countUrgent["count(*)"]);
+
+        let countMoinsUrgent = await getCountMoinsUrgent();
+        countMoinsUrgent = JSON.stringify(countMoinsUrgent["count(*)"]);
+
+        let countNonUrgent = await getCountNonUrgent();
+        countNonUrgent = JSON.stringify(countNonUrgent["count(*)"]);
+
+
         let patients = await getPatient();
         let data = [];
         patients.forEach(async patient => {
@@ -95,7 +113,8 @@ app.get('/Admin', async (request, response) => {
                 date_urgence: patient.date_urgence,
                 niveau_urgence: patient.niveau_urgence,
                 date_rendez_vous :patient.date_rendez_vous,
-                id_utilisateur:patient.id_utilisateur
+                id_utilisateur:patient.id_utilisateur,
+                
             });
         })
         response.render('index', {
@@ -106,7 +125,12 @@ app.get('/Admin', async (request, response) => {
             acceptCookie: request.session.accept,
             user: request.user,
             admin :request.user.id_type_utilisateur == 2,
-            patient:data
+            patient:data,
+            reanimation:reanimation,
+            countTresUrgent: countTresUrgent,
+            countUrgent: countUrgent,
+            countMoinsUrgent: countMoinsUrgent,
+            countNonUrgent: countNonUrgent
         });
 
     //}
@@ -123,6 +147,7 @@ app.get('/modification/:id', async (request, response) => {
         acceptCookie: request.session.accept,
         user: request.user,
         count: request.session.accept,
+        admin: request.user.id_type_utilisateur == 2,
        data: data[0]
     });
 });
@@ -352,7 +377,7 @@ app.get('/changeInfo', async (request, response) => {
         scripts: ['/js/formulaire.js'],
         acceptCookie: request.session.accept,
         user: request.user,
-        admin: request.user.id_type_utilisateur == 2,
+     
         data:data[0]
 
 
