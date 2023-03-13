@@ -22,7 +22,10 @@ import middlewareSse from './middleware-sse.js';
 import './authentification.js'
 
 import { addPatient,getPatient, getFormulaire } from './model/utilisateur.js';
-import { addUrgence,addFormulaire,getId_Urgence,checkUrgenceEnCours } from './model/stum.js';
+
+import { deleteEmergency,getRdvFutur,addUrgence,addFormulaire,getId_Urgence,checkUrgenceEnCours } from './model/stum.js';
+
+
 import { calculNiveauUrgence, calculScore } from './model/urgence.js'
 
 
@@ -86,6 +89,24 @@ app.get('/Admin', async (request, response) => {
     // }
     // else {
 
+        let reanimation = await getCountReanimation();
+        reanimation = JSON.stringify(reanimation["count(*)"]);
+        console.log(reanimation);
+
+        let countTresUrgent = await getCountTresUrgent();
+        countTresUrgent = JSON.stringify(countTresUrgent["count(*)"]);
+        console.log(countTresUrgent);
+
+        let countUrgent = await getCountUrgent();
+        countUrgent = JSON.stringify(countUrgent["count(*)"]);
+
+        let countMoinsUrgent = await getCountMoinsUrgent();
+        countMoinsUrgent = JSON.stringify(countMoinsUrgent["count(*)"]);
+
+        let countNonUrgent = await getCountNonUrgent();
+        countNonUrgent = JSON.stringify(countNonUrgent["count(*)"]);
+
+
         let patients = await getPatient();
         let data = [];
         patients.forEach(async patient => {
@@ -95,7 +116,8 @@ app.get('/Admin', async (request, response) => {
                 date_urgence: patient.date_urgence,
                 niveau_urgence: patient.niveau_urgence,
                 date_rendez_vous :patient.date_rendez_vous,
-                id_utilisateur:patient.id_utilisateur
+                id_utilisateur:patient.id_utilisateur,
+                
             });
         })
         response.render('index', {
@@ -106,7 +128,12 @@ app.get('/Admin', async (request, response) => {
             acceptCookie: request.session.accept,
             user: request.user,
             admin :request.user.id_type_utilisateur == 2,
-            patient:data
+            patient:data,
+            reanimation:reanimation,
+            countTresUrgent: countTresUrgent,
+            countUrgent: countUrgent,
+            countMoinsUrgent: countMoinsUrgent,
+            countNonUrgent: countNonUrgent
         });
 
     //}
@@ -119,10 +146,12 @@ app.get('/modification/:id', async (request, response) => {
    console.log(data);
     response.render('modification', {
         styles: ['/css/style.css'],
+
         scripts: ['/js/modification.js'],
         acceptCookie: request.session.accept,
         user: request.user,
         count: request.session.accept,
+        admin: request.user.id_type_utilisateur == 2,
        data: data[0]
     });
 });
@@ -246,7 +275,7 @@ app.post('/addUrgence', async (req, res) => {
     console.log('checkUrgenceEnCours', await checkUrgenceEnCours(id_user));
     if (await checkUrgenceEnCours(id_user) < 1) {
         try {
-            console.log('whyyyyyyyy');
+           
             await addUrgence(niveau_urgence, point_urgence, id_user)
             res.status(200).end();
 
@@ -352,26 +381,27 @@ app.get('/changeInfo', async (request, response) => {
         scripts: ['/js/formulaire.js'],
         acceptCookie: request.session.accept,
         user: request.user,
-        admin: request.user.id_type_utilisateur == 2,
+     
         data:data[0]
 
 
     });
 });
 
-app.get('/annuler', async (request, response) => {
-    response.render('annuler', {
-        title: 'Page d\'accueil',
-        styles: ['/css/style.css'],
-        scripts: ['/js/formulaire.js'],
-        acceptCookie: request.session.accept,
-        user: request.user,
-        admin: request.user.id_type_utilisateur == 2,
 
-
-    });
+app.delete('/deleterdv', async (request, response) => {
+    if (!request.user) {
+        response.status(401).send({ error: "Unauthorized" });
+    } else {
+        try {
+            await deleteEmergency(request.body.id);
+            response.status(200).send({ message: "Rdv deleted successfully" });
+        } catch (error) {
+            console.error(error);
+            response.status(500).send({ error: "Internal server error" });
+        }
+    }
 });
-
 app.get('/rdvPasse', async (request, response) => {
     response.render('rdvPasse', {
         title: 'Page d\'accueil',
@@ -389,11 +419,11 @@ app.get('/rdvFutur', async (request, response) => {
     response.render('rdvFutur', {
         title: 'Page d\'accueil',
         styles: ['/css/style.css'],
-        scripts: ['/js/formulaire.js'],
+        scripts: ['/js/urgence.js'],
         acceptCookie: request.session.accept,
         user: request.user,
         admin: request.user.id_type_utilisateur == 2,
-
+        rdv: await getRdvFutur(request.user.id_utilisateur)
 
     });
 });
