@@ -7,6 +7,52 @@ import nodemailer from "nodemailer";
 
 import 'dotenv/config';
 
+export const deleteEmergency = async (id_urgence) => {
+  let connexion = await promesseConnexion;
+
+
+  let rdvUrgence = await connexion.get(
+    `SELECT date_rendez_vous FROM rendez_vous WHERE id_urgence = ?`,
+    [id_urgence]);
+
+  if (rdvUrgence) {
+    let rdvDate = rdvUrgence.date_rendez_vous;
+    let nowDate = new Date();
+    let diffMinutes = Math.round((rdvDate - nowDate) / (1000 * 60)); // calculate the difference in minutes
+
+    if (diffMinutes > 25) {
+       
+
+      // recupere la date rendez vous de l'urgence supprimé
+      let daterdvsupprime =await connexion.get(
+        `SELECT date_rendez_vous FROM rendez_vous WHERE id_urgence = ?`,
+        [id_urgence]);
+
+        // updater le dernier rdv avec le rdv supprimé  puis faire un update de tous les rdv
+        await connexion.run(
+          `UPDATE rendez_vous SET date_rendez_vous = ? WHERE date_rendez_vous = (
+            SELECT MAX(date_rendez_vous) FROM rendez_vous
+          );`,[daterdvsupprime.date_rendez_vous]);
+
+      // delete the urgency and the last appointment in appoinment table 
+      await connexion.run(`DELETE FROM rendez_vous WHERE id_urgence = ?`, [id_urgence]);
+      await connexion.run(`DELETE FROM urgence WHERE id_urgence = ?`, [id_urgence]);
+      await connexion.run(`DELETE FROM formulaire WHERE id_urgence = ?`, [id_urgence]);
+
+      updateRDVuser();
+
+    }
+
+    else {
+      await connexion.run(`DELETE FROM urgence WHERE id_urgence = ?`, [id_urgence]);
+      await connexion.run(`DELETE FROM rendez_vous WHERE id_urgence = ?`, [id_urgence]);
+      await connexion.run(`DELETE FROM formulaire WHERE id_urgence = ?`, [id_urgence]);
+
+
+    }
+  }
+
+}
 
 export const getUrgences = async () => {
   let connexion = await promesseConnexion;
@@ -16,6 +62,7 @@ export const getUrgences = async () => {
   return resultat;
 
 }
+
 
 export const getId_Urgence = async (id_user) => {
   let connexion = await promesseConnexion;
@@ -29,40 +76,36 @@ export const getId_Urgence = async (id_user) => {
 
 
 
-export const sendEmail= async(emaildata)=> {
+export const sendEmail = async (emaildata) => {
 
   const transporter = nodemailer.createTransport({
-      host: 'smtp-mail.outlook.com',                  // hostname
-      service: 'outlook',                             // service name
-      secureConnection: false,
-      tls: {
-          ciphers: 'SSLv3'                            // tls version
-      },
-      port: 587,
-      auth: {
-          user: process.env.USEREMAIL,
-          pass: process.env.PASSEMAIL,
-      }
+
+    service: 'gmail',
+
+    auth: {
+      user: process.env.USEREMAIL,
+      pass: process.env.PASSEMAIL,
+    }
   });
 
   try {
-      let info = await transporter.sendMail({
-          from:  'STUM <stum.rdv@outlook.com>',
-          to: emaildata.to,
-          subject: emaildata.subject,
-          html: emaildata.html,
+    let info = await transporter.sendMail({
+      from: 'STUM <stum.rdv@gmail.com>',
+      to: emaildata.to,
+      subject: emaildata.subject,
+      html: emaildata.html,
 
-      });
-      console.log("Message sent: %s", info.messageId);
-      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-    
-      // Preview only available when sending through an Ethereal account
-      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-      return 'Email sent successfully';
-      
+    });
+    console.log("Message sent: %s", info.messageId);
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+    // Preview only available when sending through an Ethereal account
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    return 'Email sent successfully';
+
   } catch (err) {
-      console.error(" catch erreur envoi",err);
-      throw new Error('Failed to send email');
+    console.error(" catch erreur envoi", err);
+    throw new Error('Failed to send email');
   }
 }
 
@@ -116,7 +159,7 @@ export const updateRDVuser = async () => {
        ORDER BY points_urgence DESC`
   );
 
-
+  const emailsPromises = [];
   // update rdv   et comparer entre l<ancien et le nouveau rdv pour les notifications
   if (rdvs && rdvs.length > 0) {
     for (let i = 0; i < utilisateurs.length; i++) {
@@ -136,7 +179,7 @@ export const updateRDVuser = async () => {
         `UPDATE rendez_vous SET date_rendez_vous = ? WHERE id_utilisateur = ?`,
         [rdvs[i]?.date_rendez_vous, urgences[i]?.id_utilisateur]
       );
-      
+
       // Récupérer le rendez-vous mis à jour
       let updatedrdv = await connexion.get(
         `SELECT id_rendez_vous, date_rendez_vous 
@@ -153,17 +196,17 @@ export const updateRDVuser = async () => {
       );
 
       let emailData;
-     //get user info
+      //get user info
       const utilisateur = await getUtilisateurById(urgences[i]?.id_utilisateur);
 
       const date = new Date(rdvs[i]?.date_rendez_vous);
       const dateNormaleRdv = date.toLocaleString();
 
       // Comparer les deux rendez-vous pour déterminer si l'ancien rendez-vous est différent du nouveau
-      
+
       if (oldrdv?.date_rendez_vous !== updatedrdv?.date_rendez_vous) {
 
-      
+
 
         //si le  premier rdv de l<utilisateur a ete updater des le premier coup 
 
@@ -172,7 +215,7 @@ export const updateRDVuser = async () => {
           console.log(`bonjour , votre rendez-vous Mr l'utilisateur${utilisateur.prenom} ${utilisateur.nom}est prevu pour le ${dateNormaleRdv} `);
           console.log(" if");
           emailData = {
-        
+
             to: utilisateur.courriel,
             subject: `rendez-vous d'urgence`,
             html: `
@@ -184,7 +227,7 @@ export const updateRDVuser = async () => {
               </div>
             `
           };
-          await sendEmail(emailData);
+          emailsPromises.push(sendEmail(emailData));
 
         }
 
@@ -197,28 +240,27 @@ export const updateRDVuser = async () => {
             subject: `rendez-vous d'urgence`,
             html: `
               <div>
-              
+               
                 <p>Bonjour ${utilisateur.prenom} ${utilisateur.nom},</p>
                 <p>Votre rendez-vous a été mis à jour. Le nouveau rendez-vous est prévu pour ${dateNormaleRdv}.</p>
                 <p>Veuillez noter que ceci est juste une version d'essai et que tout rendez-vous est juste une simulation.</p>
               </div>
             `
           };
-
-          await sendEmail(emailData);
+          emailsPromises.push(sendEmail(emailData));
 
         }
-     
 
- 
+
+
       }
 
       // si le rdv de la derniere urgence n<est pas modifie   il envoi un courriell au patient
-      else if(lastUrgence?.id_utilisateur === urgences[i]?.id_utilisateur){
+      else if (lastUrgence?.id_utilisateur === urgences[i]?.id_utilisateur) {
         console.log("else if");
         console.log(`bonjour , votre rendez-vous Mr l'utilisateur ${utilisateur.prenom} ${utilisateur.nom} est prevu pour le ${dateNormaleRdv} `);
         emailData = {
-      
+
           to: utilisateur.courriel,
           subject: `rendez-vous d'urgence`,
           html: `
@@ -231,8 +273,8 @@ export const updateRDVuser = async () => {
         `
         };
 
-    
-        await sendEmail(emailData);
+
+        emailsPromises.push(sendEmail(emailData));
       }
       console.log(emailData);
 
@@ -242,6 +284,29 @@ export const updateRDVuser = async () => {
 
 
     }
+    // send all emails asynchronously and continue with program execution
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+
+    // il envois un email chaque 10 secondes pour eviter limit exeeded
+
+    async function sendEmails() {
+      for (let i = 0; i < emailsPromises.length; i++) {
+        const timestamp = Date.now();
+        console.log(`Sending email ${i} at ${timestamp} ms`);
+        await delay(10000); // 10 second delay
+        try {
+          await emailsPromises[i];
+        } catch (error) {
+          console.error('Error sending email:', error);
+        }
+      }
+      console.log('All emails sent successfully');
+    }
+
+    sendEmails();
+
+
   }
 };
 
@@ -329,6 +394,32 @@ export const addUrgence = async (niveauUrgence, pointsUrgence, id_utilisateur) =
   await assignRdv(id_utilisateur);
 
 
+
+}
+
+export const getRdvFutur = async (id_Utilisateur) => {
+  let connexion = await promesseConnexion;
+
+  try {
+    let RdvFutur = await connexion.all(
+      `SELECT  * FROM rendez_vous RV INNER JOIN urgence U ON RV.id_utilisateur = U.id_utilisateur WHERE etat_urgence = 1 AND U.id_utilisateur = ?`,
+      [id_Utilisateur]
+    );
+
+    // Convertir la date en format LocalDate string
+    RdvFutur = RdvFutur.map((rdv) => {
+      const dateRdv = new Date(rdv.date_rendez_vous);
+      rdv.date_rendez_vous = dateRdv.toLocaleString();
+      return rdv;
+    });
+
+
+    return RdvFutur;
+  }
+  catch (error) {
+    console.log(error);
+    return null;
+  }
 
 }
 
