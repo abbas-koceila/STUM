@@ -53,6 +53,16 @@ body{
   color: black;
 
 }
+#changeInfo_form{
+  max-width: 60%;
+  opacity: 80%;
+  
+  margin:10rem auto 0 auto;
+  border-radius: 5px;
+  color: black;
+  background-color: rgba(238, 239, 238, 0.9);
+  padding: 20px;
+}
 #form-hike{
   max-width: 60%;
   opacity: 80%;
@@ -88,9 +98,11 @@ body{
   }
 }
 @media only screen and (max-width:900px) {
-  #form-hike  {
+  #changeInfo_form  {
     max-width: 90%;
- 
+  }
+  #form-hike{
+    max-width: 90%;
   }
 }
 
