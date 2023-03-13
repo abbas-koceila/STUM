@@ -21,7 +21,7 @@ import bodyParser from 'body-parser';
 import middlewareSse from './middleware-sse.js';
 import './authentification.js'
 
-import { addPatient,getPatient, getFormulaire } from './model/utilisateur.js';
+import { addPatient,getPatient, getFormulaire, getCountReanimation, getCountMoinsUrgent, getCountTresUrgent, getCountUrgent, getCountNonUrgent, changeInfoDb } from './model/utilisateur.js';
 
 import { deleteEmergency,getRdvFutur,addUrgence,addFormulaire,getId_Urgence,checkUrgenceEnCours } from './model/stum.js';
 
@@ -91,11 +91,11 @@ app.get('/Admin', async (request, response) => {
 
         let reanimation = await getCountReanimation();
         reanimation = JSON.stringify(reanimation["count(*)"]);
-        console.log(reanimation);
+        //console.log(reanimation);
 
         let countTresUrgent = await getCountTresUrgent();
         countTresUrgent = JSON.stringify(countTresUrgent["count(*)"]);
-        console.log(countTresUrgent);
+        //console.log(countTresUrgent);
 
         let countUrgent = await getCountUrgent();
         countUrgent = JSON.stringify(countUrgent["count(*)"]);
@@ -117,8 +117,10 @@ app.get('/Admin', async (request, response) => {
                 niveau_urgence: patient.niveau_urgence,
                 date_rendez_vous :patient.date_rendez_vous,
                 id_utilisateur:patient.id_utilisateur,
+                id_urgence:patient.id_urgence
                 
             });
+            
         })
         response.render('index', {
             title: 'index',
@@ -140,10 +142,10 @@ app.get('/Admin', async (request, response) => {
 });
 app.get('/modification/:id', async (request, response) => {
     let id_user=request.params.id;
-    console.log("athaya: "+id_user);
+    //console.log("athaya: "+id_user);
     let data = await getFormulaire(id_user);
     
-   console.log(data);
+   //console.log(data);
     response.render('modification', {
         styles: ['/css/style.css'],
 
@@ -152,7 +154,7 @@ app.get('/modification/:id', async (request, response) => {
         user: request.user,
         count: request.session.accept,
         admin: request.user.id_type_utilisateur == 2,
-       data: data[0]
+        data: data[0]
     });
 });
 app.get('/home', (request, response) => {
@@ -201,7 +203,7 @@ app.get('/patient', async (request, response) => {
 
 
         });
-        console.log(request.user)
+        //console.log(request.user)
     }
     else {
         response.redirect('/Connexion');
@@ -222,7 +224,7 @@ app.post('/inscription', async (request, response, next) => {
         }
         catch (error) {
             if (error.code === 'SQLITE_CONSTRAINT') {
-                console.log(request.body);
+                //console.log(request.body);
                 response.status(409).end();
             }
             else {
@@ -264,7 +266,8 @@ app.post('/connexion', (request, response, next) => {
 app.post('/addUrgence', async (req, res) => {
 
     const data = req.body;
-     let id_user = req.user.id_utilisateur;
+    console.log(data)
+     let id_user = data[0].id;
 
     console.log("user id",id_user);
 
@@ -272,7 +275,7 @@ app.post('/addUrgence', async (req, res) => {
     let point_urgence = await calculScore(data);
     console.log("point_urgence: ",point_urgence);
     let niveau_urgence = await calculNiveauUrgence(point_urgence);
-    console.log('checkUrgenceEnCours', await checkUrgenceEnCours(id_user));
+    //console.log('checkUrgenceEnCours', await checkUrgenceEnCours(id_user));
     if (await checkUrgenceEnCours(id_user) < 1) {
         try {
            
@@ -285,7 +288,7 @@ app.post('/addUrgence', async (req, res) => {
                 res.status(409).json({ message: 'Error while adding emergency' });
             } else {
                 // next(error);
-                console.log('pas ajoute');
+                //console.log('pas ajoute');
                 console.error(error);
             }
         }
@@ -304,25 +307,27 @@ app.post('/addUrgence', async (req, res) => {
 app.post('/addFormulaire', async (req, res) => {
     
     const data = req.body;
-    let id_user=req.user.id_utilisateur;
-    let id_urgence;
-    try {
-         let id_urgence_JSON = await getId_Urgence(id_user)
-         let id_urgence_temp = JSON.stringify(id_urgence_JSON);
-         id_urgence=id_urgence_temp.id_urgence;
-         console.log("id_urgence : "+id_urgence);
-    } catch (error) {
-        console.error(error);
-        if (error.code === 'SQLITE_CONSTRAINT') {
-            res.status(409).json({ message: 'Error while getting id_urgence from getId_Urgence(id_user)' });
-        } else {
-        // next(error);
-        console.error(error);
-        }
-    }
+    let id_user = data.id.id;
+
+    // console.log('athaya id user');
+    // console.log(id_user)
+    // let id_urgence;
+    // try {
+    //      let id_urgence_JSON = await getId_Urgence(id_user)
+    //     console.log('dayi kan')
+    //      console.log(id_urgence_JSON);
+    // } catch (error) {
+    //     console.error(error);
+    //     if (error.code === 'SQLITE_CONSTRAINT') {
+    //         res.status(409).json({ message: 'Error while getting id_urgence from getId_Urgence(id_user)' });
+    //     } else {
+    //     // next(error);
+    //     console.error(error);
+    //     }
+    // }
 
     try {
-        await addFormulaire(id_user,id_urgence,data)
+        await addFormulaire(id_user,data)
     
         res.status(200).json({ message: 'Emergency added' });
     } catch (error) {
@@ -378,13 +383,10 @@ app.get('/changeInfo', async (request, response) => {
     response.render('changeInfo', {
         title: 'Page d\'accueil',
         styles: ['/css/style.css'],
-        scripts: ['/js/formulaire.js'],
+        scripts: ['/js/changeInfo.js'],
         acceptCookie: request.session.accept,
         user: request.user,
-     
         data:data[0]
-
-
     });
 });
 
@@ -427,6 +429,27 @@ app.get('/rdvFutur', async (request, response) => {
 
     });
 });
+
+app.put('/changeInfo', async (req, res) => {
+
+    const data = req.body;
+    let id_user = req.user.id_utilisateur;
+    //console.log(data);
+
+    try {
+        await changeInfoDb(data,id_user);
+    } catch (error) {
+        console.error(error);
+        if (error.code === 'SQLITE_CONSTRAINT') {
+            res.status(409).json({ message: 'Error while getting id_urgence from getId_Urgence(id_user)' });
+        } else {
+            // next(error);
+            console.error(error);
+        }
+    }
+
+});
+    
 
 
 
