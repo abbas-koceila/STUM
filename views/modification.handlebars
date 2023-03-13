@@ -1,0 +1,606 @@
+<div id="loader">
+  <div class="loader"></div>
+</div>
+
+
+<form id="form-hike" novalidate>
+
+  <h3 class="titel-form id_urgence_class" data-id={{data.id_urgence}}> Modifier Urgence</h3>
+
+  <div class="wrapper-form id_user_class" data-id={{data.id_utilisateur}}>
+    <!-- general form elements -->
+    <div class="card card-primary">
+      <!-- general form elements disabled -->
+      <div class="card card-warning">
+        <!-- /.card-header -->
+        <div class="card-body">
+          <!-- textarea -->
+          <div class="form-group">
+            <label for="raison">Quelle est la raison de votre demande d'urgence ?</label>
+            <textarea class="form-control" rows="3" placeholder="raison" id="raison" name="raison" >{{data.raison}}</textarea>
+          </div>
+
+          <!-- text input -->
+          <div class="form-group">
+            <label for="date">Quand est-ce que cela a commencé / s'est produit ?</label>
+            <input type="datetime-local" class="form-control" id="date" name="date_debut_symptomes" required value="{{data.date_debut_symptomes}}"/> 
+          </div>
+
+          <!-- text input -->
+          <div class="form-group">
+            <label for="description">Decrivez votre cas ?</label>
+            <input type="text" class="form-control" placeholder="Entrez votre description ici" id="description" name="description" value="{{data.description}}">
+          </div>
+
+          <!-- textarea -->
+          <div class="form-group">
+            <label for="symptomes">Quels symptômes ressentez-vous ?</label>
+            <textarea class="form-control" rows="3" placeholder="Entrez vos symptômes ici" id="symptomes" name="symptomes">{{data.symptomes}}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="medical_condition"> Avez-vous des conditions médicales préexistantes? </label>
+           
+            <div class="form-check">
+              
+              <input class="form-check-input" type="radio" name="medical_condition" id="medical_condition_oui"  value="1"
+               {{#if this.data.medical_condition}}checked
+               {{/if}}
+               >
+              
+              <label class="form-check-label" for="medical_condition_oui">Oui</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="medical_condition" id="medical_condition_non" value="0"
+              {{#unless this.data.medical_condition}}checked
+               {{/unless}}
+               >
+              <label class="form-check-label" for="medical_condition_non">Non</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="hospital_history"> Avez-vous été admis à l'hôpital ou eu des interventions chirurgicales
+              dans le passé? </label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="hospital_history" id="hospital_history_oui" value="1"
+              {{#if this.data.hospital_history}}checked
+               {{/if}}>
+              <label class="form-check-label" for="hospital_history_oui">Oui</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="hospital_history" id="hospital_history_non" value="0"
+              {{#unless this.data.hospital_history}}checked
+               {{/unless}}
+               >
+              <label class="form-check-label" for="hospital_history_non">Non</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="medication_history"> Prenez-vous des médicaments, des vitamines ou des suppléments? </label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="medication_history" id="medication_history_oui" value="1"
+              {{#if this.data.medication_history}}checked
+               {{/if}}>
+              <label class="form-check-label" for="medication_history_oui">Oui</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="medication_history" id="medication_history_non" value="0"
+              {{#unless this.data.medication_history}}checked
+               {{/unless}}>
+              <label class="form-check-label" for="medication_history_non">Non</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="last_meal"> Quand avez-vous mangé ou bu pour la dernière fois? </label>
+            <input type="datetime-local" class="form-control" min="2022-11-08T00:00" max="2999-12-12T00:00"
+              id="last_meal" name="last_meal" required value="{{data.last_meal}}">
+          </div>
+
+          <div class="form-group">
+            <label> Veuillez cocher les a partie du corps où vous ressentez une douleur</label>
+            <div class="row">
+              <label class="col-3"> Partie du corps </label>
+              <label class="col-3"> Gauche </label>
+              <label class="col-3"> Droite </label>
+            </div>
+            <!-- part corp -->
+            <div class="row">
+              <div class="col-3">
+                <label> tête </label>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="tete_gauche" value="11"
+                   {{#if this.data.tete_gauche}}checked
+                  {{/if}}>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="tete_droite" value="11"
+                  {{#if this.data.tete_droite}}checked
+                  {{/if}}>
+                </div>
+              </div>
+            </div>
+            <!-- fin part corp -->
+            <!-- part corp -->
+            <div class="row">
+              <div class="col-3">
+                <label> cou </label>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="cou_gauche" value="10"
+                  {{#if this.data.cou_gauche}}checked
+                  {{/if}}>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="cou_droite" value="10"
+                  {{#if this.data.cou_droite}}checked
+                  {{/if}}>
+                </div>
+              </div>
+            </div>
+            <!-- fin part corp -->
+            <!-- part corp -->
+            <div class="row">
+              <div class="col-3">
+                <label> épaule </label>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="epaule_gauche" value="9"
+                  {{#if this.data.epaule_gauche}}checked
+                  {{/if}}>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="epaule_droite" value="9"
+                  {{#if this.data.epaule_droite}}checked
+                  {{/if}}>
+                </div>
+              </div>
+            </div>
+            <!-- fin part corp -->
+            <!-- part corp -->
+            <div class="row">
+              <div class="col-3">
+                <label> poitrine </label>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="poitrine_gauche" value="8"
+                  {{#if this.data.poitrine_gauche}}checked
+                  {{/if}}>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="poitrine_droite" value="8"
+                  {{#if this.data.poitrine_droite}}checked
+                  {{/if}}>
+                </div>
+              </div>
+            </div>
+            <!-- fin part corp -->
+            <!-- part corp -->
+            <div class="row">
+              <div class="col-3">
+                <label> coude </label>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="coude_gauche" value="7"
+                  {{#if this.data.coude_gauche}}checked
+                  {{/if}}>
+                </div>
+              </div>
+
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="coude_droite" value="7"
+                  {{#if this.data.coude_droite}}checked
+                  {{/if}}>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- fin part corp -->
+
+            <!-- part corp -->
+            <div class="row">
+              <div class="col-3">
+                <label> main et poignet </label>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="main_et_poignet_gauche" value="6"
+                  {{#if this.data.main_et_poignet_gauche}}checked
+                  {{/if}}>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="main_et_poignet_droit" value="6"
+                  {{#if this.data.main_et_poignet_droit}}checked
+                  {{/if}}>
+                </div>
+              </div>
+            </div>
+            <!-- fin part corp -->
+            <!-- part corp -->
+            <div class="row">
+              <div class="col-3">
+                <label> hanche </label>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="hanche_gauche" value="5"
+                  {{#if this.data.hanche_gauche}}checked
+                  {{/if}}>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="hanche_droite" value="5"
+                  {{#if this.data.hanche_droite}}checked
+                  {{/if}}>
+                </div>
+              </div>
+            </div>
+            <!-- fin part corp -->
+            <!-- part corp -->
+            <div class="row">
+              <div class="col-3">
+                <label> cuisse </label>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="cuisse_gauche" value="4"
+                  {{#if this.data.cuisse_gauche}}checked
+                  {{/if}}>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="cuisse_droite" value="4"
+                  {{#if this.data.cuisse_droite}}checked
+                  {{/if}}>
+                </div>
+              </div>
+            </div>
+            <!-- fin part corp -->
+            <!-- part corp -->
+            <div class="row">
+              <div class="col-3">
+                <label> genau </label>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="genou_gauche" value="3"
+                  {{#if this.data.genou_gauche}}checked
+                  {{/if}}>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="genou_droit" value="3"
+                  {{#if this.data.genou_droit}}checked
+                  {{/if}}>
+                </div>
+              </div>
+            </div>
+            <!-- fin part corp -->
+            <!-- part corp -->
+            <div class="row">
+              <div class="col-3">
+                <label> jambe </label>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="jambe_gauche" value="2"
+                  {{#if this.data.jambe_gauche}}checked
+                  {{/if}}>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="jambe_droite" value="2"
+                  {{#if this.data.jambe_droite}}checked
+                  {{/if}}>
+                </div>
+              </div>
+            </div>
+            <!-- fin part corp -->
+            <!-- part corp -->
+            <div class="row">
+              <div class="col-3">
+                <label> pied </label>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="pied_gauche" value="1"
+                  {{#if this.data.pied_gauche}}checked
+                  {{/if}}>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="pied_droite" value="1"
+                  {{#if this.data.pied_droite}}checked
+                  {{/if}}>
+                </div>
+              </div>
+            </div>
+            <!-- fin part corp -->
+          </div>
+
+          <div class="range-douleurs ">
+            <label></label>
+            <label> Le chiffre 0 correspond à « pas de douleur », le chiffre 10 correspond à la « douleur
+              maximale imaginable : </label>
+
+            <label></label>
+
+            <!-- debut range -->
+            <div class="range-douleurs ">
+              <label></label>
+              <label> Le chiffre 0 correspond à « pas de douleur », le chiffre 10 correspond à la « douleur maximale
+                imaginable : </label>
+
+              <label></label>
+
+              <!-- debut range -->
+              <div class="form-groupe ">
+                <label class="font-weight-normal douleur_prensent_class" data-id={{data.douleur_present}}>Douleur au moment présent : </label>
+
+                <div class="row   ">
+                  <div class="col form-check ">
+
+                    <input class="form-check-input " type="radio" name="douleur_present" value="0">
+                    <label class="form-check-label ">0</label>
+
+                  </div>
+
+                  <div class="col form-check ">
+
+                    <input class="form-check-input" type="radio" name="douleur_present" value="1">
+                    <label class="form-check-label">1</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_present" value="2">
+                    <label class="form-check-label">2</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_present" value="3">
+                    <label class="form-check-label">3</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_present" value="4">
+                    <label class="form-check-label">4</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_present" value="5">
+                    <label class="form-check-label">5</label>
+
+                  </div>
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_present" value="6">
+                    <label class="form-check-label">6</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_present" value="7">
+                    <label class="form-check-label">7</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_present" value="8">
+                    <label class="form-check-label">8</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_present" value="9">
+                    <label class="form-check-label">9</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_present" value="10">
+                    <label class="form-check-label">10</label>
+
+                  </div>
+
+                </div>
+              </div>
+              <!-- fin range -->
+            </div>
+            <label></label>
+
+            <!-- debut range -->
+            <div class="form-group">
+              <label class="font-weight-normal douleur8jours_class" data-id={{data.douleur8jours}}>Douleur habituelle depuis les 8 derniers jours : </label>
+
+              <div class="row ">
+                <div class=" col form-check ">
+
+                  <input class="form-check-input" type="radio" name="douleur8jours" value="0">
+                  <label class="form-check-label">0</label>
+
+                </div>
+
+                <div class="col ">
+
+                  <input class="form-check-input" type="radio" name="douleur8jours" value="1">
+                  <label class="form-check-label">1</label>
+
+                </div>
+
+                <div class="col ">
+
+                  <input class="form-check-input" type="radio" name="douleur8jours" value="2">
+                  <label class="form-check-label">2</label>
+
+                </div>
+
+                <div class="col ">
+
+                  <input class="form-check-input" type="radio" name="douleur8jours" value="3">
+                  <label class="form-check-label">3</label>
+
+                </div>
+
+                <div class="col ">
+
+                  <input class="form-check-input" type="radio" name="douleur8jours" value="4">
+                  <label class="form-check-label">4</label>
+
+                </div>
+
+                <div class="col ">
+
+                  <input class="form-check-input" type="radio" name="douleur8jours" value="5">
+                  <label class="form-check-label">5</label>
+
+                </div>
+                <div class="col ">
+
+                  <input class="form-check-input" type="radio" name="douleur8jours" value="6">
+                  <label class="form-check-label">6</label>
+
+                </div>
+
+                <div class="col ">
+
+                  <input class="form-check-input" type="radio" name="douleur8jours" value="7">
+                  <label class="form-check-label">7</label>
+
+                </div>
+
+                <div class="col ">
+
+                  <input class="form-check-input" type="radio" name="douleur8jours" value="8">
+                  <label class="form-check-label">8</label>
+
+                </div>
+
+                <div class="col ">
+
+                  <input class="form-check-input" type="radio" name="douleur8jours" value="9">
+                  <label class="form-check-label">9</label>
+
+                </div>
+
+                <div class="col ">
+
+                  <input class="form-check-input" type="radio" name="douleur8jours" value="10">
+                  <label class="form-check-label">10</label>
+                </div>
+              </div>
+              <!-- fin range -->
+            </div>
+            <label></label>
+
+            <!-- debut range -->
+            <div class="form-group ">
+              <label class="font-weight-normal douleur_intense_class" data-id={{data.douleur_intense}}>Douleur la plus intense depuis les 8 derniers jours :</label>
+
+              <div class="row">
+                <div class="col form-check">
+                  <input class="form-check-input" type="radio" name="douleur_intense" value="0">
+                  <label class="form-check-label">0</label>
+                </div>
+
+                <div class="col">
+                  <input class="form-check-input" type="radio" name="douleur_intense" value="1">
+                  <label class="form-check-label">1</label>
+                </div>
+
+                <div class="col">
+                  <input class="form-check-input" type="radio" name="douleur_intense" value="2">
+                  <label class="form-check-label">2</label>
+                </div>
+
+                <div class="col">
+                  <input class="form-check-input" type="radio" name="douleur_intense" value="3">
+                  <label class="form-check-label">3</label>
+                </div>
+
+                <div class="col">
+                  <input class="form-check-input" type="radio" name="douleur_intense" value="4">
+                  <label class="form-check-label">4</label>
+                </div>
+
+                <div class="col">
+
+                  <input class="form-check-input" type="radio" name="douleur_intense" value="5">
+                  <label class="form-check-label">5</label>
+
+                </div>
+                <div class="col">
+                  <input class="form-check-input" type="radio" name="douleur_intense" value="6">
+                  <label class="form-check-label">6</label>
+                </div>
+
+                <div class="col">
+                  <input class="form-check-input" type="radio" name="douleur_intense" value="7">
+                  <label class="form-check-label">7</label>
+                </div>
+
+                <div class="col">
+                  <input class="form-check-input" type="radio" name="douleur_intense" value="8">
+                  <label class="form-check-label">8</label>
+                </div>
+
+                <div class="col">
+                  <input class="form-check-input" type="radio" name="douleur_intense" value="9">
+                  <label class="form-check-label">9</label>
+                </div>
+
+                <div class="col">
+                  <input class="form-check-input" type="radio" name="douleur_intense" value="10">
+                  <label class="form-check-label">10</label>
+                </div>
+              </div>
+            </div>
+            <!-- fin range -->
+            <div class="btnform">
+              <button type="submit" class="btn btn-primary mofidier" id="add-submit" > Modifier</button>
+            </div>
+
+          </div>
+        </div><!-- /.card-body -->
+      </div> <!-- /.card-warning -->
+    </div> <!--/.card card-primary -->
+  </div><!-- /.wrapper-form -->
+</form>
+
+

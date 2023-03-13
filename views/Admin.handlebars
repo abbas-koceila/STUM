@@ -1,0 +1,87 @@
+<div id="title">
+  <h1>Portail Admin</h1>
+</div>
+
+
+
+
+<link rel="stylesheet" href="./css/Admin.css">
+
+<div class="col-lg-9" id="liste-card">
+
+  <a href="#contact" target="_parent">
+    <input type="submit" value="Ajouter Un Patient" class="btn btn-primary mb-2 btn-lg btn-block">
+    </a>
+  <div class="row" id="row">
+
+
+    <div class="col-lg-4 col-md-6 mb-4" id="options">
+      <div class="card h-100">
+        <h3 class="card-title attribute">Nom</h3>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4" id="options">
+      <div class="card h-100">
+        <h3 class="card-title attribute">Prenom</h3>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4" id="options">
+      <div class="card h-100">
+        <h3 class="card-title attribute">Description</h3>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4" id="options">
+      <div class="card h-100">
+        <h5 class="card-title attribute">Smith</h5>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4" id="options">
+      <div class="card h-100">
+        <h5 class="card-title attribute">John</h5>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4" id="options">
+      <div class="card h-100">
+        <h5 class="card-title attribute">Mal de tete</h5>
+      </div>
+    </div>
+
+  </div>
+  <!-- Form -->
+  <form id="form-hike" novalidate>
+
+    <h3 class="titel-form">Nouveau Patient</h3>
+
+    <label for="form-nom" class="formlabel">Nom *</label>
+    <input type="text" placeholder="Nom" class="form-control" id="form-nom" required>
+    <div id="error-nom" class="error"></div>
+
+
+    <label for="form-dateDebut" class="formlabel">Prenom *</label>
+    <input type="text" placeholder="Prenom" class="form-control" id="form-nom" required>
+    <div id="error-date" class="error"></div>
+
+    <label for="form-capacite" class="formlabel">Severite *</label>
+    <input type="number" placeholder="Severite" class="form-control" id="form-capacite" min="1" max="50" required>
+    <div id="error-capacity" class="error"></div>
+
+
+    <label for="form-description" class="formlabel">Description *</label>
+    <textarea class="form-control" placeholder="Description" id="form-description" rows="3" required minlength="10" maxlength="2000"></textarea>
+    <div id="error-description" class="error"></div>
+
+    <button type="submit" class="btn btn-primary mb-2" id="add-submit"> Ajouter</button>
+
+  </form>
+
+  <!-- /.form -->
+</div>
+<!-- /.col-lg-9 -->
+
+
+<script type="module" src="./js/Admin.js"></script>
