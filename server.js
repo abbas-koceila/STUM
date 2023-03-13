@@ -160,8 +160,8 @@ app.get('/modification/:id', async (request, response) => {
 app.get('/home', (request, response) => {
     response.render('home', {
         titre: 'home',
-        styles: ['/css/authentification.css', '/css/style.css'],
-        scripts: ['/js/counter.js'],
+        styles: [ '/css/style.css'],
+        scripts: [],
         acceptCookie: request.session.accept,
         user: request.user,
         count: request.session.accept

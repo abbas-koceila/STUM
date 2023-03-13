@@ -147,7 +147,7 @@ const createDatabase = async (connectionPromise) => {
             ('administrateur');
 
         INSERT INTO utilisateur (id_utilisateur, id_type_utilisateur, nom, prenom, courriel, nom_utilisateur, mot_passe) VALUES 
-            (1, 2, 'Admin', 'admin', 'admin@stum.ca', 'admin', 'Admin'),
+            (1, 2, 'Admin', 'admin', 'admin@stum.ca', 'admin', '$2b$10$v2/Qvts40JfhEn/4MxhbdeLuqoW4SznK9Pi6mCxRJ0DTpzWy7.Z.i'),
             (2, 1, 'Patient', 'test', 'patient@stum.com', 'patient', 'test');
 
         INSERT INTO patient(id_utilisateur, numero_carte_sante, numero_tel) VALUES
