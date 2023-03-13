@@ -1,6 +1,9 @@
 // calcule le score d<urgence
+<<<<<<< HEAD
 import { promesseConnexion } from './connexion.js';
 
+=======
+>>>>>>> main
 export function calculScore(inputs) {
 
 
@@ -29,6 +32,7 @@ export function calculNiveauUrgence(totalScore) {
     }
   }
 
+<<<<<<< HEAD
   
   export const getUrgenceValidByIdUser = async (user_id) => {
     let connexion = await promesseConnexion;
@@ -46,3 +50,6 @@ export function calculNiveauUrgence(totalScore) {
   
   
   
+=======
+
+>>>>>>> main
