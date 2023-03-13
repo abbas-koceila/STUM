@@ -1,6 +1,7 @@
 import { promesseConnexion } from "./connexion.js";
 import { hash } from "bcrypt";
 
+
 export const getUserId = async (courriel) => {
     let connexion = await promesseConnexion;
 
@@ -71,7 +72,7 @@ export const getPatient=async ()=>{
     let connexion = await promesseConnexion;
 
    let utilisateur= await  connexion.all(
-        `SELECT ur.id_utilisateur, ur.date_urgence, ur.niveau_urgence, ut.nom , ut.prenom, rdv.date_rendez_vous FROM urgence ur
+        `SELECT ur.id_utilisateur, ur.id_urgence, ur.date_urgence, ur.niveau_urgence, ut.nom , ut.prenom, rdv.date_rendez_vous FROM urgence ur
         INNER JOIN utilisateur ut 
         ON ur.id_utilisateur = ut.id_utilisateur
         INNER JOIN rendez_vous rdv  
@@ -93,15 +94,7 @@ export const getFormulaire=async (id_user)=>{
     let connexion = await promesseConnexion;
 
    let formulaire= await  connexion.all(
-        `SELECT ut.nom, ut.prenom , ut.courriel, p.numero_carte_sante,p.numero_tel,
-        f.date_debut_symptomes, f.description, f.symptomes,
-        f.medical_condition, f.hospital_history, f.medication_history, f.last_meal,
-        f.tete_gauche,f.tete_droite,f.cou_gauche, f.cou_droite, f.epaule_gauche,
-        f.epaule_droite, f.poitrine_gauche, f.poitrine_droite, f.coude_gauche,
-        f.coude_droite, f.main_et_poignet_gauche, f.main_et_poignet_droit, f.hanche_gauche,
-        f.hanche_droite, f.cuisse_gauche, f.cuisse_droite, f.genou_gauche, f.genou_droit,
-        f.jambe_gauche, f.jambe_droite, f.pied_gauche, f.pied_droite,
-        f.douleur_present, f.douleur8jours, f.douleur_intense
+        `SELECT *
         FROM utilisateur ut
         INNER JOIN patient p 
         ON p.id_utilisateur=ut.id_utilisateur
@@ -113,3 +106,65 @@ export const getFormulaire=async (id_user)=>{
     return formulaire;
 }
 
+export const getCountReanimation =async ()=>{
+    let connexion = await promesseConnexion;
+
+   let countReanimation= await  connexion.get(
+        `SELECT count(*) FROM urgence
+        WHERE niveau_urgence = 1 AND etat_urgence = 1; ` 
+    );
+    return countReanimation;
+}
+export const getCountTresUrgent =async ()=>{
+    let connexion = await promesseConnexion;
+
+   let countTresUrgent= await  connexion.get(
+        `SELECT count(*) FROM urgence
+        WHERE niveau_urgence = 2 AND etat_urgence = 1; ` 
+    );
+    return countTresUrgent;
+}
+
+
+export const getCountUrgent =async ()=>{
+    let connexion = await promesseConnexion;
+
+   let countUrgent= await  connexion.get(
+        `SELECT count(*)  FROM urgence
+        WHERE niveau_urgence = 3 AND etat_urgence = 1; ` 
+    );
+    return countUrgent;
+}
+export const getCountMoinsUrgent =async ()=>{
+    let connexion = await promesseConnexion;
+
+   let countMoinsUrgent= await  connexion.get(
+        `SELECT count(*)  FROM urgence
+        WHERE niveau_urgence = 4 AND etat_urgence = 1; ` 
+    );
+    return countMoinsUrgent;
+}
+
+export const getCountNonUrgent =async ()=>{
+    let connexion = await promesseConnexion;
+
+   let countNonUrgent= await  connexion.get(
+        `SELECT count(*)  FROM urgence
+        WHERE (niveau_urgence = 5 OR niveau_urgence = 0)  AND etat_urgence = 1; ` 
+    );
+    return countNonUrgent;
+}
+
+export const changeInfoDb= async(data,id_user) =>{
+    let connexion = await promesseConnexion;
+    await connexion.run(
+        `update utilisateur 
+        set nom_utilisateur = ?,
+        nom = ?,
+        prenom=?,
+        courriel=?
+        where id_utilisateur=?;
+         `,
+         [data.nom_utilisateur, data.nom, data.prenom, data.courriel, id_user]
+    );
+    }

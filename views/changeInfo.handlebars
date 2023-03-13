@@ -1,42 +1,65 @@
-
 <div id="title">
   <h1>Changer informations</h1>
 </div>
 
-<form id="form-hike" novalidate>
+<form id="changeInfo_form" novalidate>
 
-    <h3 class="titel-form">Changer informations</h3>
+  <h3 class="titel-form">Changer informations</h3>
 
-      <label for="nom" class="formlabel">Nom *</label>
-      <input type="text" placeholder="Yorguen" class="form-control" id="nom" name="nom" value={{data.nom}}>
-      <div id="error-nom" class="error"></div>
+  <label for="nom" class="formlabel">Nom *</label>
+  <input type="text" class="form-control" id="nom" name="nom" value={{data.nom}}>
+  <div id="error-nom" class="error"></div>
 
-      <label for="prenom" class="formlabel">Prénom *</label>
-      <input type="text" placeholder="John" class="form-control" id="prenom" name="prenom" value="{{data.prenom}}">
-      <div id="error-prenom" class="error"></div>
+  <label for="prenom" class="formlabel">Prénom *</label>
+  <input type="text" placeholder="John" class="form-control" id="prenom" name="prenom" value={{data.prenom}}>
+  <div id="error-prenom" class="error"></div>
 
-      <label for="email" class="formlabel">Adresse Courriel *</label>
-      <input type="email" placeholder="johndoe@example.com" class="form-control" id="email" name="email" value="{{data.courriel}}">
-      <div id="error-email" class="error"></div>
+ <label for="nomUtilisateur" class="formlabel">Nom d'utilisateur *</label>
+<input type="text" placeholder="Nom utilisateur" class="form-control" id="form-nomUtilisateur" name="nom_utilisateur" value={{data.nom_utilisateur}}>
+ <div id="error-nomUtilisateur" class="error"></div>
 
-      <label for="telephone" class="formlabel">Numéro de téléphone *</label>
-      <input type="tel" placeholder="(123) 456-7890" class="form-control" id="telephone" name="telephone" value="{{data.numero_tel}}">
-      <div id="error-telephone" class="error"></div>
+  <label for="email" class="formlabel">Adresse Courriel *</label>
+  <input type="email" placeholder="johndoe@example.com" class="form-control" id="email" name="courriel"
+    value={{data.courriel}}>
+  <label id="error-email" class="error"></label>
 
-      <label for="carte-sante" class="formlabel">Numéro de carte santé *</label>
-      <input type="text" placeholder="1234 567 890 XX" class="form-control" id="carte-sante" name="carte-sante" value="{{data.numero_carte_sante}}">
-      <div id="error-carte-sante" class="error"></div>
+  <label for="telephone" class="formlabel">Numéro de téléphone *</label>
+  <input type="tel" placeholder="(123) 456-7890" class="form-control" id="telephone" name="telephone"
+    value={{data.numero_tel}}>
+  <div id="error-telephone" class="error"></div>
 
-      <label for="adresse" class="formlabel">Adresse *</label>
-      <input type="text" placeholder="801 Aviation Pkwy, Ottawa, ON K1K 4R3" class="form-control" id="adresse" name="adresse" value="">
-      <div id="error-adresse" class="error"></div>
+  <label for="carte-sante" class="formlabel">Numéro de carte santé *</label>
+  <input type="text" placeholder="1234 567 890 XX" class="form-control" id="carte-sante" name="carte-sante"
+    value={{data.numero_carte_sante}}>
+  <div id="error-carte-sante" class="error"></div>
+
+  <label for="adresse" class="formlabel">Adresse *</label>
+  <input type="text" placeholder="801 Aviation Pkwy, Ottawa, ON K1K 4R3" class="form-control" id="adresse"
+    name="adresse" value="">
+  <div id="error-adresse" class="error"></div>
+  <div class="btnform">
+    <button type="submit" class="btn btn-primary mb-2 btn-lg btn-block" id="creation-compte">Changer informations</button>
+  </div>
+
+</form>
+<div class="modal"id='MyModal' tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
-    <a href="/patient">
-      <button type="button" class="btn btn-primary mb-2 btn-lg btn-block" id="creation-compte">Changer informations</button>
-    </a>
-
-  </form>
-
-
-<script type="module" src="/js/home.js"></script>

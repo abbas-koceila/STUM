@@ -14,20 +14,16 @@ formUrgence.addEventListener('submit', async (event) => {
     .map(input => ({ [input.name]: input.value }));
 
   console.log(selectedInputs);
-
-
+  
+// recupere lid de l'utilisateur de formulaire et le mettre dans la premiere place de tableau DATA
+  selectedInputs.unshift(document.querySelector('.id_user_class').dataset)
   //YOUNIS
   let data = formToObject(formUrgence);
+  data.id=(document.querySelector('.id_user_class').dataset)
+  console.log(data.id)
   console.log("DATA : " + JSON.stringify(data));
 
-  let res = await fetch('/addFormulaire', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
 
-  if (res.ok) {
-    console.log(' form est ajoute');
     let response = await fetch('/addUrgence', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -40,10 +36,19 @@ formUrgence.addEventListener('submit', async (event) => {
     if (response.status === 200) {
       console.log('l urgence est ajoute');
       alert('l urgence est ajoute avec succes');
-      window.location.replace('/rdvFutur');
-  
-  
-  
+      let res = await fetch('/addFormulaire', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    
+      if (res.ok) {
+        console.log(' form est ajoute'); 
+        window.location.replace('/rdvFutur');
+    }
+    else if (res.status === 409) {
+      console.log('Vous avez déjà créé un form d\'urgence. Vous ne pouvez pas en créer un autre.');
+    }
   
     } else if (response.status === 409) {
   
@@ -56,19 +61,5 @@ formUrgence.addEventListener('submit', async (event) => {
     }
 
     
-  }
-  else if (res.status === 409) {
-    console.log('Vous avez déjà créé un form d\'urgence. Vous ne pouvez pas en créer un autre.');
-  }
-
-
-
-
-
-
-
- 
-
-
 });
 

@@ -19,13 +19,17 @@ export const getUrgences = async () => {
 
 }
 
-export const getId_Urgence = async (id_user) => {
+export const getId_Urgence = async (id_utilisateur) => {
   let connexion = await promesseConnexion;
 
-  let resultat = await connexion.all('SELECT id_urgence FROM urgence WHERE id_utilisateur= ? ',
-    [id_user]);
-
-  return resultat;
+  let urgence = await connexion.get(
+    `SELECT id_urgence FROM urgence WHERE id_utilisateur = 4 and etat_urgence = 1`,
+    
+  );
+  let urgenceId = urgence;
+    console.log('resulata')
+  console.log(urgenceId)
+  return urgenceId;
 
 }
 
@@ -59,6 +63,7 @@ export const deleteEmergency = async (id_urgence) => {
       // delete the urgency and the last appointment in appoinment table 
       await connexion.run(`DELETE FROM rendez_vous WHERE id_urgence = ?`, [id_urgence]);
       await connexion.run(`DELETE FROM urgence WHERE id_urgence = ?`, [id_urgence]);
+      await connexion.run(`DELETE FROM formulaire WHERE id_urgence = ?`, [id_urgence]);
 
       updateRDVuser();
 
@@ -67,6 +72,7 @@ export const deleteEmergency = async (id_urgence) => {
     else {
       await connexion.run(`DELETE FROM urgence WHERE id_urgence = ?`, [id_urgence]);
       await connexion.run(`DELETE FROM rendez_vous WHERE id_urgence = ?`, [id_urgence]);
+      await connexion.run(`DELETE FROM formulaire WHERE id_urgence = ?`, [id_urgence]);
 
 
     }
@@ -228,7 +234,7 @@ export const updateRDVuser = async () => {
               </div>
             `
           };
-          emailsPromises.push(sendEmail(emailData));
+         emailsPromises.push(sendEmail(emailData));
 
         }
 
@@ -248,7 +254,7 @@ export const updateRDVuser = async () => {
               </div>
             `
           };
-          emailsPromises.push(sendEmail(emailData));
+         emailsPromises.push(sendEmail(emailData));
 
         }
 
@@ -305,7 +311,7 @@ export const updateRDVuser = async () => {
       console.log('All emails sent successfully');
     }
 
-    sendEmails();
+   sendEmails();
 
 
   }
@@ -337,6 +343,7 @@ export const assignRdv = async (id_utilisateur) => {
     newRdvDate.setMinutes(newRdvDate.getMinutes() + 30);
 
   }
+  console.log('id utili kocyl', id_utilisateur)
 
   let urgence = await connexion.get(
     `SELECT id_urgence FROM urgence WHERE id_utilisateur = ? and etat_urgence = 1`,
@@ -376,15 +383,7 @@ export const checkUrgenceEnCours = async (id_utilisateur) => {
 
 
 
-export const addFormulaire = async (id_user, id_urgence, data) => {
-  let connexion = await promesseConnexion;
 
-  await connexion.run(
-    `INSERT INTO formulaire (id_utilisateur,id_urgence, date_debut_symptomes, description, symptomes, medical_condition, hospital_history, medication_history, last_meal, tete_gauche, tete_droite, cou_gauche, cou_droite, epaule_gauche, epaule_droite, poitrine_gauche, poitrine_droite, coude_gauche, coude_droite, main_et_poignet_gauche, main_et_poignet_droit, hanche_gauche, hanche_droite, cuisse_gauche, cuisse_droite, genou_gauche, genou_droit, jambe_gauche, jambe_droite, pied_gauche, pied_droite, douleur_present, douleur8jours, douleur_intense)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-    [id_user, id_urgence, data.date_debut_symptomes, data.description, data.symptomes, data.medical_condition, data.hospital_history, data.medication_history, data.last_meal, data.tete_gauche[0], data.tete_droite[0], data.cou_gauche[0], data.cou_droite[0], data.epaule_gauche[0], data.epaule_droite[0], data.poitrine_gauche[0], data.poitrine_droite[0], data.coude_gauche[0], data.coude_droite[0], data.main_et_poignet_gauche[0], data.main_et_poignet_droit[0], data.hanche_gauche[0], data.hanche_droite[0], data.cuisse_gauche[0], data.cuisse_droite[0], data.genou_gauche[0], data.genou_droit[0], data.jambe_gauche[0], data.jambe_droite[0], data.pied_gauche[0], data.pied_droite[0], data.douleur_present, data.douleur8jours, data.douleur_intense]
-  )
-}
 
 
 
@@ -408,6 +407,29 @@ export const addUrgence = async (niveauUrgence, pointsUrgence, id_utilisateur) =
 
 
 
+}
+export const addFormulaire = async (id_utilisateur, data) => {
+  let connexion = await promesseConnexion;
+  console.log('athaaayyaaa id utili')
+  console.log(id_utilisateur)
+  let id_urgence;
+  try {
+  let urgence = await connexion.get(
+    `SELECT id_urgence FROM urgence WHERE id_utilisateur = ? and etat_urgence = 1`,
+    [id_utilisateur]
+  );
+ console.log('wayiiiiiii id urgence')
+  id_urgence =urgence.id_urgence;
+  console.log( urgence);
+} catch (error) {
+  console.error(error);
+}
+
+  await connexion.run(
+    `INSERT INTO formulaire (id_utilisateur,id_urgence, date_debut_symptomes, description, symptomes, medical_condition, hospital_history, medication_history, last_meal, tete_gauche, tete_droite, cou_gauche, cou_droite, epaule_gauche, epaule_droite, poitrine_gauche, poitrine_droite, coude_gauche, coude_droite, main_et_poignet_gauche, main_et_poignet_droit, hanche_gauche, hanche_droite, cuisse_gauche, cuisse_droite, genou_gauche, genou_droit, jambe_gauche, jambe_droite, pied_gauche, pied_droite, douleur_present, douleur8jours, douleur_intense)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+    [id_utilisateur, id_urgence, data.date_debut_symptomes, data.description, data.symptomes, data.medical_condition, data.hospital_history, data.medication_history, data.last_meal, data.tete_gauche[0], data.tete_droite[0], data.cou_gauche[0], data.cou_droite[0], data.epaule_gauche[0], data.epaule_droite[0], data.poitrine_gauche[0], data.poitrine_droite[0], data.coude_gauche[0], data.coude_droite[0], data.main_et_poignet_gauche[0], data.main_et_poignet_droit[0], data.hanche_gauche[0], data.hanche_droite[0], data.cuisse_gauche[0], data.cuisse_droite[0], data.genou_gauche[0], data.genou_droit[0], data.jambe_gauche[0], data.jambe_droite[0], data.pied_gauche[0], data.pied_droite[0], data.douleur_present, data.douleur8jours, data.douleur_intense]
+  )
 }
 
 

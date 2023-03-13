@@ -20,7 +20,6 @@ const UsernameInvalide = () => {
 
     incorrectUsernameDiv.append(p);
 }
-console.log("hello");
 formAuth.addEventListener('submit', async (event) => {
     console.log("connected");
     event.preventDefault();

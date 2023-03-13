@@ -7,11 +7,17 @@
   <div class="row">
 
 
-    <div class="col  mb-4   align-self-center" id="option-nu">
+    <div class="col  mb-4   align-self-center" data-id=1>
       <div class="card h-100 bg-dark text-center">
 
         <div class="card-body ">
-          <h2 class="card-title text-white">100</h2>
+          <h2 class="card-title text-white">
+            {{#if reanimation}}
+            {{reanimation}}
+            {{else}}
+            0
+            {{/if}}
+            </h2>
         </div>
         <div class="card-footer text-white">
           <h2>Réanimation</h2>
@@ -20,11 +26,17 @@
     </div>
 
 
-    <div class="col  mb-4   align-self-center" id="option-nu">
+    <div class="col  mb-4   align-self-center" >
       <div class="card h-100 bg-danger text-center">
 
         <div class="card-body ">
-          <h2 class="card-title text-white">200</h2>
+          <h2 class="card-title text-white">
+            {{#if countTresUrgent}}
+            {{countTresUrgent}}
+            {{else}}
+            0
+            {{/if}}
+          </h2>
         </div>
         <div class="card-footer text-white">
           <h2>Très urgent</h2>
@@ -36,7 +48,13 @@
       <div class="card h-100 bg-warning text-center">
 
         <div class="card-body ">
-          <h2 class="card-title text-white">1</h2>
+          <h2 class="card-title text-white">
+            {{#if countUrgent}}
+            {{countUrgent}}
+            {{else}}
+            0
+            {{/if}}
+          </h2>
         </div>
         <div class="card-footer text-white">
           <h2>Urgent</h2>
@@ -48,7 +66,13 @@
       <div class="card h-100 bg-success text-center">
 
         <div class="card-body ">
-          <h2 class="card-title text-white">1</h2>
+          <h2 class="card-title text-white">
+            {{#if countMoinsUrgent}}
+            {{countMoinsUrgent}}
+            {{else}}
+            0
+            {{/if}}
+          </h2>
         </div>
         <div class="card-footer text-white">
           <h2>Moins urgent</h2>
@@ -60,7 +84,13 @@
       <div class="card h-100 bg-info text-center">
 
         <div class="card-body ">
-          <h2 class="card-title text-white">1</h2>
+          <h2 class="card-title text-white">
+            {{#if countNonUrgent}}
+            {{countNonUrgent}}
+            {{else}}
+            0
+            {{/if}}
+          </h2>
         </div>
         <div class="card-footer text-white">
           <h2>Non urgent</h2>
@@ -111,7 +141,7 @@
                     </i>
                     Edit
                   </a>
-                  <a class="btn btn-danger btn-sm" href="#">
+                  <a class="btn btn-danger btn-sm delete"data-id={{this.id_urgence}}>
                     <i class="fas fa-trash">
                     </i>
                     Delete
