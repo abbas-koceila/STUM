@@ -21,7 +21,7 @@ import bodyParser from 'body-parser';
 import middlewareSse from './middleware-sse.js';
 import './authentification.js'
 
-import { addPatient,getPatient, getFormulaire, getCountReanimation, getCountMoinsUrgent, getCountTresUrgent, getCountUrgent, getCountNonUrgent, changeInfoDb } from './model/utilisateur.js';
+import { addPatient,getPatient, getFormulaire, getCountReanimation, getCountMoinsUrgent, getCountTresUrgent, getCountUrgent, getCountNonUrgent, changeInfoDb,getUtilisateurById } from './model/utilisateur.js';
 
 import { deleteEmergency,getRdvFutur,addUrgence,addFormulaire,getId_Urgence,checkUrgenceEnCours } from './model/stum.js';
 
@@ -379,7 +379,7 @@ app.get('/formulaire', async (request, response) => {
 
 app.get('/changeInfo', async (request, response) => {
     let id_user=request.user.id_utilisateur;
-    let data = await getFormulaire(id_user);
+    let data = await getUtilisateurById(id_user);
     response.render('changeInfo', {
         title: 'Page d\'accueil',
         styles: ['/css/style.css'],
@@ -430,7 +430,7 @@ app.get('/rdvFutur', async (request, response) => {
     });
 });
 
-app.put('/changeInfo', async (req, res) => {
+app.post('/changeInfo', async (req, res) => {
 
     const data = req.body;
     let id_user = req.user.id_utilisateur;
