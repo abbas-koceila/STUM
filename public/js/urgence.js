@@ -5,6 +5,10 @@ annulerRdvButtons.forEach(button => {
 
     console.log("akhirrclick annuler");
     try {
+      const confirmed = confirm("Êtes-vous sûr de vouloir d'annuler ce rendez-vous ?");
+      if (!confirmed) {
+        return; // Sortir de la fonction si l'utilisateur a annulé
+      }
       const response = await fetch('/deleterdv', {
         method: 'DELETE',
         headers: {
