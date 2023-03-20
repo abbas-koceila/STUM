@@ -16,8 +16,8 @@
         <div class="card-body">
           <!-- textarea -->
           <div class="form-group">
-            <label for="raison">Quelle est la raison de votre demande d'urgence ?</label>
-            <textarea class="form-control" rows="3" placeholder="raison" id="raison" name="raison" >{{data.raison}}</textarea>
+            <label for="raison">Quelle est la raison de votre demande d'urgence / Quels symptômes ressentez-vous ?</label>
+            <textarea class="form-control" rows="3" placeholder="raison" id="raison" name="raison" >{{data.symptomes}}</textarea>
           </div>
 
           <!-- text input -->
@@ -30,12 +30,6 @@
           <div class="form-group">
             <label for="description">Decrivez votre cas ?</label>
             <input type="text" class="form-control" placeholder="Entrez votre description ici" id="description" name="description" value="{{data.description}}">
-          </div>
-
-          <!-- textarea -->
-          <div class="form-group">
-            <label for="symptomes">Quels symptômes ressentez-vous ?</label>
-            <textarea class="form-control" rows="3" placeholder="Entrez vos symptômes ici" id="symptomes" name="symptomes">{{data.symptomes}}</textarea>
           </div>
 
           <div class="form-group">
@@ -342,14 +336,6 @@
             </div>
             <!-- fin part corp -->
           </div>
-
-          <div class="range-douleurs ">
-            <label></label>
-            <label> Le chiffre 0 correspond à « pas de douleur », le chiffre 10 correspond à la « douleur
-              maximale imaginable : </label>
-
-            <label></label>
-
             <!-- debut range -->
             <div class="range-douleurs ">
               <label></label>
@@ -445,6 +431,94 @@
             </div>
             <label></label>
 
+<!-- debut range -->
+              <div class="form-groupe ">
+                <label class="font-weight-normal douleur_intense_class" data-id={{data.douleur_intense}}>Douleur au moment présent : </label>
+
+                <div class="row   ">
+                  <div class="col form-check ">
+
+                    <input class="form-check-input " type="radio" name="douleur_intense" value="0">
+                    <label class="form-check-label ">0</label>
+
+                  </div>
+
+                  <div class="col form-check ">
+
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="1">
+                    <label class="form-check-label">1</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="2">
+                    <label class="form-check-label">2</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="3">
+                    <label class="form-check-label">3</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="4">
+                    <label class="form-check-label">4</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="5">
+                    <label class="form-check-label">5</label>
+
+                  </div>
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="6">
+                    <label class="form-check-label">6</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="7">
+                    <label class="form-check-label">7</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="8">
+                    <label class="form-check-label">8</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="9">
+                    <label class="form-check-label">9</label>
+
+                  </div>
+
+                  <div class="col ">
+
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="10">
+                    <label class="form-check-label">10</label>
+
+                  </div>
+
+                </div>
+              </div>
+              <!-- fin range -->
+            </div>
+            <label></label>
+
+
             <!-- debut range -->
             <div class="form-group">
               <label class="font-weight-normal douleur8jours_class" data-id={{data.douleur8jours}}>Douleur habituelle depuis les 8 derniers jours : </label>
@@ -529,68 +603,7 @@
             </div>
             <label></label>
 
-            <!-- debut range -->
-            <div class="form-group ">
-              <label class="font-weight-normal douleur_intense_class" data-id={{data.douleur_intense}}>Douleur la plus intense depuis les 8 derniers jours :</label>
-
-              <div class="row">
-                <div class="col form-check">
-                  <input class="form-check-input" type="radio" name="douleur_intense" value="0">
-                  <label class="form-check-label">0</label>
-                </div>
-
-                <div class="col">
-                  <input class="form-check-input" type="radio" name="douleur_intense" value="1">
-                  <label class="form-check-label">1</label>
-                </div>
-
-                <div class="col">
-                  <input class="form-check-input" type="radio" name="douleur_intense" value="2">
-                  <label class="form-check-label">2</label>
-                </div>
-
-                <div class="col">
-                  <input class="form-check-input" type="radio" name="douleur_intense" value="3">
-                  <label class="form-check-label">3</label>
-                </div>
-
-                <div class="col">
-                  <input class="form-check-input" type="radio" name="douleur_intense" value="4">
-                  <label class="form-check-label">4</label>
-                </div>
-
-                <div class="col">
-
-                  <input class="form-check-input" type="radio" name="douleur_intense" value="5">
-                  <label class="form-check-label">5</label>
-
-                </div>
-                <div class="col">
-                  <input class="form-check-input" type="radio" name="douleur_intense" value="6">
-                  <label class="form-check-label">6</label>
-                </div>
-
-                <div class="col">
-                  <input class="form-check-input" type="radio" name="douleur_intense" value="7">
-                  <label class="form-check-label">7</label>
-                </div>
-
-                <div class="col">
-                  <input class="form-check-input" type="radio" name="douleur_intense" value="8">
-                  <label class="form-check-label">8</label>
-                </div>
-
-                <div class="col">
-                  <input class="form-check-input" type="radio" name="douleur_intense" value="9">
-                  <label class="form-check-label">9</label>
-                </div>
-
-                <div class="col">
-                  <input class="form-check-input" type="radio" name="douleur_intense" value="10">
-                  <label class="form-check-label">10</label>
-                </div>
-              </div>
-            </div>
+        
             <!-- fin range -->
             <div class="btnform">
               <button type="submit" class="btn btn-primary mofidier" id="add-submit" > Modifier</button>

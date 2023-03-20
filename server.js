@@ -145,11 +145,10 @@ app.get('/modification/:id', async (request, response) => {
     //console.log("athaya: "+id_user);
     let data = await getFormulaire(id_user);
     
-   //console.log(data);
+   console.log(data);
     response.render('modification', {
-        styles: ['/css/style.css'],
-
-        scripts: ['/js/modification.js'],
+        styles: ['../../css/style.css'],
+        scripts: ['../../js/modification.js'],
         acceptCookie: request.session.accept,
         user: request.user,
         count: request.session.accept,
@@ -160,8 +159,7 @@ app.get('/modification/:id', async (request, response) => {
 app.get('/home', (request, response) => {
     response.render('home', {
         titre: 'home',
-        styles: ['/css/authentification.css', '/css/style.css'],
-        scripts: ['/js/counter.js'],
+        styles: ['../../css/style.css'],
         acceptCookie: request.session.accept,
         user: request.user,
         count: request.session.accept
@@ -170,7 +168,7 @@ app.get('/home', (request, response) => {
 app.get('/connexion', (request, response) => {
     response.render('Connexion', {
         titre: 'Connexion',
-        styles: ['/css/authentification.css', '/css/style.css'],
+        styles: ['/css/style.css'],
         scripts: ['/js/connexion.js'],
         acceptCookie: request.session.accept,
         user: request.user,
@@ -182,7 +180,7 @@ app.get('/connexion', (request, response) => {
 app.get('/inscription', (request, response) => {
     response.render('Inscription', {
         titre: 'Inscription',
-        styles: ['/css/authentification.css', '/css/style.css'],
+        styles: ['/css/style.css'],
         scripts: ['/js/inscription.js'],
         user: request.user,
         acceptCookie: request.session.accept
@@ -408,7 +406,6 @@ app.get('/rdvPasse', async (request, response) => {
     response.render('rdvPasse', {
         title: 'Page d\'accueil',
         styles: ['/css/style.css'],
-        scripts: ['/js/formulaire.js'],
         acceptCookie: request.session.accept,
         user: request.user,
         admin: request.user.id_type_utilisateur == 2,
