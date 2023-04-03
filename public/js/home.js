@@ -26,7 +26,7 @@ fetch('https://www.donneesquebec.ca/recherche/api/3/action/datastore_search_sql?
   });
 
 
-  // fetch("https://www.donneesquebec.ca/recherche/api/3/action/datastore_search_sql?sql=SELECT%20*%20from%20%22b256f87f-40ec-4c79-bdba-a23e9c50e741%22%20WHERE%20_id%20%3D73")
-  // .then(response => response.json())
-  // .then(data => console.log(data));
+  fetch("https://www.donneesquebec.ca/recherche/api/3/action/datastore_search_sql?sql=SELECT%20*%20from%20%22b256f87f-40ec-4c79-bdba-a23e9c50e741%22%20WHERE%20_id%20%3D73")
+  .then(response => response.json())
+  .then(data => console.log(data));
 
