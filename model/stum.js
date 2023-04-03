@@ -1,6 +1,6 @@
 
 import { promesseConnexion } from './connexion.js';
-import { getUtilisateurById } from './utilisateur.js';
+import { getUtilisateurById2 } from './utilisateur.js';
 import { getUrgenceValidByIdUser } from './urgence.js';
 
 //send email
@@ -204,7 +204,7 @@ export const updateRDVuser = async () => {
 
       let emailData;
       //get user info
-      const utilisateur = await getUtilisateurById(urgences[i]?.id_utilisateur);
+      const utilisateur = await getUtilisateurById2(urgences[i]?.id_utilisateur);
 
       const date = new Date(rdvs[i]?.date_rendez_vous);
       const dateNormaleRdv = date.toLocaleString();

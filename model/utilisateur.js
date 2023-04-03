@@ -11,13 +11,7 @@ export const getUserId = async (courriel) => {
 }
 
 
-export const getUtilisateurById = async (id) => {
-    let connexion = await promesseConnexion;
 
-    let utilisateur = await connexion.get( `SELECT * FROM utilisateur WHERE id_utilisateur=?`,[id]);
-
-    return utilisateur;
-}
 
 
 
@@ -46,6 +40,13 @@ export const addPatient = async (nomUtilisateur, nom, prenom, courriel, motDePas
         VALUES(?,?,?)`,
         [userId, numeroCarteSante, numeroTel]
     )
+}
+export const getUtilisateurById2 = async (id) => {
+    let connexion = await promesseConnexion;
+
+    let utilisateur = await connexion.get( `SELECT * FROM utilisateur WHERE id_utilisateur=?`,[id]);
+
+    return utilisateur;
 }
 
 export const getUtilisateurByNom=async (nomUtilisateur)=>{
@@ -89,6 +90,19 @@ export const getPatient=async ()=>{
     }
     
     return utilisateur;
+}
+export const getUtilisateurById=async (id_user)=>{
+    let connexion = await promesseConnexion;
+
+   let formulaire= await  connexion.all(
+        `SELECT *
+        FROM utilisateur ut
+        INNER JOIN patient p 
+        ON p.id_utilisateur=ut.id_utilisateur
+        WHERE ut.id_utilisateur = ?`,
+        [id_user]
+    );
+    return formulaire;
 }
 export const getFormulaire=async (id_user)=>{
     let connexion = await promesseConnexion;
@@ -166,5 +180,13 @@ export const changeInfoDb= async(data,id_user) =>{
         where id_utilisateur=?;
          `,
          [data.nom_utilisateur, data.nom, data.prenom, data.courriel, id_user]
+    );
+    await connexion.run(
+        `update patient 
+        set numero_tel = ?,
+        numero_carte_sante = ?
+        where id_utilisateur=?;
+         `,
+         [data.telephone, data.carte_sante, id_user]
     );
     }

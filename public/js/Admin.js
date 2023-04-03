@@ -17,6 +17,10 @@ for (const deleteBtn of deleteBtns) {
             id: event.currentTarget.dataset.id
         }
         try {
+            const confirmed = confirm("Êtes-vous sûr de vouloir d'annuler ce rendez-vous ?");
+      if (!confirmed) {
+        return; // Sortir de la fonction si l'utilisateur a annulé
+      }
             let response = await fetch('/deleterdv', {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },

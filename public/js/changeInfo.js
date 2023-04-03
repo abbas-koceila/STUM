@@ -9,8 +9,9 @@ let formInfo = document.getElementById('changeInfo_form');
 formInfo.addEventListener('submit', async (event) => {
     event.preventDefault();
     let data = formToObject(formInfo);
+    console.log(data)
     let res = await fetch('/changeInfo', {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     });
