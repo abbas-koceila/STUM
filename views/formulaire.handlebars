@@ -3,7 +3,7 @@
 </div>
 
 
-<div id="form-hike" novalidate>
+<div id="form-hike" >
 
   <h3 class="titel-form  id_user_class" data-id={{user.id_utilisateur}}>Nouvelle urgence</h3>
 
@@ -20,10 +20,10 @@
 
         <!-- /.card-header -->
         <div class="card-body">
-          <form id="emergency_form" class="form-content" novalidate>
+          <form id="emergency_form" class="form-content" >
            <!-- textarea -->
            <div class="form-group">
-            <label for="raison">Quelle est la raison de votre demande d'urgence ?</label>
+            <label for="raison">Quelle est la raison de votre demande d'urgence / Quels symptômes ressentez-vous ?</label>
             <textarea class="form-control" rows="3" placeholder="raison" id="raison" name="raison"></textarea>
           </div>
       
@@ -40,13 +40,6 @@
             <label for="description">Pouvez-vous décrire l'intensité de votre douleur actuelle et comment cela affecte-t-il vos activités quotidiennes ?</label>
             <input type="text" class="form-control" placeholder="Entrez votre description ici" id="description"
               name="description">
-          </div>
-
-          <!-- textarea -->
-          <div class="form-group">
-            <label for="symptomes">Quels symptômes ressentez-vous ?</label>
-            <textarea class="form-control" rows="3" placeholder="Entrez vos symptômes ici" id="symptomes"
-              name="symptomes"></textarea>
           </div>
 
           <div class="form-group">
@@ -475,92 +468,69 @@
                 <!-- fin range -->
               </div>
               <label></label>
-  
+              
               <!-- debut range -->
-              <div class="form-group">
-                <label class="font-weight-normal">Douleur habituelle depuis les 8 derniers jours : </label>
+              <div class="form-group ">
+                <label class="font-weight-normal">Douleur la plus intense depuis les 8 derniers jours :</label>
   
-                <div class="row ">
-                  <div class=" col form-check ">
-  
-                    <input class="form-check-input" type="radio" name="douleur8jours" value="0">
+                <div class="row">
+                  <div class="col form-check">
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="0">
                     <label class="form-check-label">0</label>
-  
                   </div>
   
-                  <div class="col ">
-  
-                    <input class="form-check-input" type="radio" name="douleur8jours" value="1">
+                  <div class="col">
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="1">
                     <label class="form-check-label">1</label>
-  
                   </div>
   
-                  <div class="col ">
-  
-                    <input class="form-check-input" type="radio" name="douleur8jours" value="2">
+                  <div class="col">
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="2">
                     <label class="form-check-label">2</label>
-  
                   </div>
   
-                  <div class="col ">
-  
-                    <input class="form-check-input" type="radio" name="douleur8jours" value="3">
+                  <div class="col">
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="3">
                     <label class="form-check-label">3</label>
-  
                   </div>
   
-                  <div class="col ">
-  
-                    <input class="form-check-input" type="radio" name="douleur8jours" value="4">
+                  <div class="col">
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="4">
                     <label class="form-check-label">4</label>
-  
                   </div>
   
-                  <div class="col ">
+                  <div class="col">
   
-                    <input class="form-check-input" type="radio" name="douleur8jours" value="5">
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="5">
                     <label class="form-check-label">5</label>
   
                   </div>
-                  <div class="col ">
-  
-                    <input class="form-check-input" type="radio" name="douleur8jours" value="6">
+                  <div class="col">
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="6">
                     <label class="form-check-label">6</label>
-  
                   </div>
   
-                  <div class="col ">
-  
-                    <input class="form-check-input" type="radio" name="douleur8jours" value="7">
+                  <div class="col">
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="7">
                     <label class="form-check-label">7</label>
-  
                   </div>
   
-                  <div class="col ">
-  
-                    <input class="form-check-input" type="radio" name="douleur8jours" value="8">
+                  <div class="col">
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="8">
                     <label class="form-check-label">8</label>
-  
                   </div>
   
-                  <div class="col ">
-  
-                    <input class="form-check-input" type="radio" name="douleur8jours" value="9">
+                  <div class="col">
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="9">
                     <label class="form-check-label">9</label>
-  
                   </div>
   
-                  <div class="col ">
-  
-                    <input class="form-check-input" type="radio" name="douleur8jours" value="10">
+                  <div class="col">
+                    <input class="form-check-input" type="radio" name="douleur_intense" value="10">
                     <label class="form-check-label">10</label>
                   </div>
                 </div>
-                <!-- fin range -->
               </div>
-              <label></label>
-  
-            
               <!-- fin range -->
             </div>
             <div class="btnform">
