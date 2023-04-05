@@ -3,10 +3,10 @@ fetch('https://www.donneesquebec.ca/recherche/api/3/action/datastore_search_sql?
   .then(data => {
     // Récupérer les champs que vous voulez afficher
     const record = data.result.records[0];
-    
+
     // Créer un élément HTML
     const div = document.createElement('div');
-    
+
     // Ajouter chaque champ à l'élément
     div.innerHTML = `
     <h2>Nombre total de patients présents à l'urgence: ${record['Nombre_total_de_patients_presents_a_lurgence']}</h2>
@@ -20,8 +20,9 @@ fetch('https://www.donneesquebec.ca/recherche/api/3/action/datastore_search_sql?
                 
       <h5> source : <a href="https://www.donneesquebec.ca/" target="_blank">donneesquebec.ca</a></h5>
     `;
-    
-    document.getElementById('data').appendChild(div);
+    if (document.getElementById('data')) {
+      document.getElementById('data').appendChild(div);
+    }
   });
 
 

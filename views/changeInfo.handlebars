@@ -2,40 +2,40 @@
   <h1>Changer informations</h1>
 </div>
 
-<form id="changeInfo_form" novalidate>
+<form id="changeInfo_form" >
 
   <h3 class="titel-form">Changer informations</h3>
 
   <label for="nom" class="formlabel">Nom *</label>
-  <input type="text" class="form-control" id="nom" name="nom" value={{data.nom}}>
+  <input type="text" class="form-control" id="nom" name="nom" value={{data.nom}} required>
   <div id="error-nom" class="error"></div>
 
   <label for="prenom" class="formlabel">Prénom *</label>
-  <input type="text" placeholder="John" class="form-control" id="prenom" name="prenom" value={{data.prenom}}>
+  <input type="text" placeholder="John" class="form-control" id="prenom" name="prenom" value={{data.prenom}} required>
   <div id="error-prenom" class="error"></div>
 
- <label for="nomUtilisateur" class="formlabel">Nom d'utilisateur *</label>
-<input type="text" placeholder="Nom utilisateur" class="form-control" id="form-nomUtilisateur" name="nom_utilisateur" value={{data.nom_utilisateur}}>
+ <label for="nomUtilisateur" class="formlabel" >Nom d'utilisateur *</label>
+<input type="text" placeholder="Nom utilisateur" class="form-control" id="form-nomUtilisateur" name="nom_utilisateur" disabled value={{data.nom_utilisateur}} required>
  <div id="error-nomUtilisateur" class="error"></div>
 
   <label for="email" class="formlabel">Adresse Courriel *</label>
   <input type="email" placeholder="johndoe@example.com" class="form-control" id="email" name="courriel"
-    value={{data.courriel}}>
+    value={{data.courriel}} required>
   <label id="error-email" class="error"></label>
 
   <label for="telephone" class="formlabel">Numéro de téléphone *</label>
   <input type="tel" placeholder="(123) 456-7890" class="form-control" id="telephone" name="telephone"
-    value={{data.numero_tel}}>
+    value={{data.numero_tel}} required>
   <div id="error-telephone" class="error"></div>
 
   <label for="carte-sante" class="formlabel">Numéro de carte santé *</label>
   <input type="text" placeholder="1234 567 890 XX" class="form-control" id="carte-sante" name="carte_sante"
-    value={{data.numero_carte_sante}}>
+    value={{data.numero_carte_sante}} required>
   <div id="error-carte-sante" class="error"></div>
 
   <label for="adresse" class="formlabel">Adresse *</label>
   <input type="text" placeholder="801 Aviation Pkwy, Ottawa, ON K1K 4R3" class="form-control" id="adresse"
-    name="adresse" value="">
+    name="adresse" value="" >
   <div id="error-adresse" class="error"></div>
   <div class="btnform">
     <button type="submit" class="btn btn-primary mb-2 btn-lg btn-block" id="creation-compte">Changer informations</button>
