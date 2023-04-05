@@ -1,27 +1,23 @@
 <div>
+  <form id="form-auth" class="form-conx-Ins">
+    <h3 class="titel-form">Inscription</h3>
 
+    <input type="text" placeholder="Nom" class="form-control" id="form-nom" pattern="^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$" required>
+    <input type="text" placeholder="Prenom" class="form-control" id="form-prenom" pattern="^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$" required>
+    <input type="text" placeholder="Nom utilisateur" class="form-control" id="form-nomUtilisateur" minlength="4" maxlength="12" pattern="\S+"title="Exemple de format: user01 (minimum 4 caractéres et sans espace)" required>
+        <div id="error-nomUtilisateur" class="error"></div>
+    <input type="email" placeholder="Addresse Courriel" class="form-control" id="form-courriel" required>
+        <div id="error-courriel" class="error"></div>
+    <input type="tel" placeholder="Numero de telephone" class="form-control" id="form-telephone" pattern="(\+?1)?[2-9]\d{9}" required title="Exemple de format: 5145551234 (10 chiffres)">
+    <input type="text" placeholder="Numero de carte sante" class="form-control" id="form-carte" pattern="[A-Za-z]{4}[0-9]{8}" title="Exemple de format: ABCD12345678 (4 lettres suivi de 8 chiffres)" required>
+    <input type="password" placeholder="Mot de passe" class="form-control" id="input-mot-de-passe" pattern="^(?=.*\d)(?=.*[A-Z]).{8,}$"title="Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule et un chiffre." required>
+    <div id="password-message" class="p-message "></div>
 
- <form id="form-auth" class="form-conx-Ins">
+    <p class="inscription">J'ai deja un compte.<a href="/connexion"> Je me connecte.</a></p>
 
-   <h3 class="titel-form">Inscription</h3>
-
-        
-  <input type="text" placeholder="Nom" class="form-control" id="form-nom" required>
-  <input type="text" placeholder="Prenom" class="form-control" id="form-prenom" required>
-  <input type="text" placeholder="Nom utilisateur" class="form-control" id="form-nomUtilisateur" required>
-  <input type="email" placeholder="Addresse Courriel" class="form-control" id="form-courriel"  required>
-  <input type="tel" placeholder="Numero de telephone" class="form-control" id="form-telephone" required>   
-  <input type="number" placeholder="Numero de carte sante" class="form-control" id="form-carte" >
-  <input type="password" placeholder="Mot de passe"  class="form-control" id="input-mot-de-passe" required>
-  <div id="password-message" class="p-message ">
-
-  </div>
-
-    <p class="inscription">J'ai deja un de compte.<a href="/connexion"> Je me connecte .</a>
-    </p>
-     <div align="center">
-        <button type="submit" class="btn btn-primary">S'inscrire</button>
-      </div>
-</form>
+    <div align="center">
+      <button type="submit" class="btn btn-primary">S'inscrire</button>
+    </div>
+  </form>
 </div>
 

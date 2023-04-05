@@ -1,4 +1,5 @@
-
+let error_nomUtilisateur =document.getElementById('error-nomUtilisateur');
+let error_courriel =document.getElementById('error-courriel');
 let formAuth = document.getElementById('form-auth');
 let inputNom = document.getElementById('form-nom');
 let inputPrenom = document.getElementById('form-prenom');
@@ -31,7 +32,14 @@ formAuth.addEventListener('submit', async (event) => {
     if (response.ok) {
         window.location.replace('/connexion');
     } else if (response.status === 409) {
-        ///afficher erreur dans linterface graphic et suprimer le console.log
-        console.log('le nom utilisateur est deja utiliser');
+        let responseJson = await response.json();
+        if (responseJson.includes("UNIQUE constraint failed: utilisateur.courriel")) {
+            error_courriel.style.display = 'block';
+            error_courriel.textContent = 'Adresse courriel déjà utilisée';
+          } else if (responseJson.includes("UNIQUE constraint failed: utilisateur.nomUtilisateur")) {
+            error_nomUtilisateur.style.display = 'block';
+            error_nomUtilisateur.textContent = 'Nom d\'utilisateur déjà utilisé';
+          }
+       
     }
 });

@@ -222,8 +222,8 @@ app.post('/inscription', async (request, response, next) => {
         }
         catch (error) {
             if (error.code === 'SQLITE_CONSTRAINT') {
-                //console.log(request.body);
-                response.status(409).end();
+               console.log(error.message);
+                response.status(409).json(error.message);
             }
             else {
                 next(error);
