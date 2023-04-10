@@ -423,28 +423,26 @@ app.get('/rdvFutur', async (request, response) => {
         user: request.user,
         admin: request.user.id_type_utilisateur == 2,
         rdv: await getRdvFutur(request.user.id_utilisateur)
-
     });
 });
 
-app.post('/changeInfo', async (req, res) => {
-
-    const data = req.body;
-    let id_user = req.user.id_utilisateur;
-    //console.log(data);
-
+app.post('/changeInfo', async (request, response) => {
+    const data = request.body;
+    let id_user = request.user.id_utilisateur;
+    console.log(data);
     try {
         await changeInfoDb(data,id_user);
+        response.status(200).json({ message: 'informations modifiées' });
+        
     } catch (error) {
         console.error(error);
         if (error.code === 'SQLITE_CONSTRAINT') {
-            res.status(409).json({ message: 'Error while getting id_urgence from getId_Urgence(id_user)' });
+            response.status(409).send({ message: 'Error while getting id_urgence from getId_Urgence(id_user)' });
         } else {
             // next(error);
             console.error(error);
         }
     }
-
 });
     
 

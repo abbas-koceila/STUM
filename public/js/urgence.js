@@ -17,7 +17,7 @@ annulerRdvButtons.forEach(button => {
 
 
 confirmButton.addEventListener('click', async () => {
-  console.log("akhirrclick annuler");
+ 
   try {
     const response = await fetch('/deleterdv', {
       method: 'DELETE',
