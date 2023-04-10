@@ -26,7 +26,6 @@ confirmButton.addEventListener('click', async () => {;
         body: JSON.stringify(data)
     });
     if (response.ok) {
-        alert(' vos informations sont changés avec succes');
         location.reload();
     }
     else if (response.status === 409) {
