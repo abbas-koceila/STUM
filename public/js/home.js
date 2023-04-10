@@ -18,7 +18,7 @@ fetch('https://www.donneesquebec.ca/recherche/api/3/action/datastore_search_sql?
       <div>Mise à jour: ${record['Mise_a_jour']}</div>
  
                 
-      <h5> source : <a href="https://www.donneesquebec.ca/">donneesquebec.ca</a></h5>
+      <h5> source : <a href="https://www.donneesquebec.ca/" target="_blank">donneesquebec.ca</a></h5>
     `;
     if (document.getElementById('data')) {
       document.getElementById('data').appendChild(div);
@@ -30,3 +30,4 @@ fetch('https://www.donneesquebec.ca/recherche/api/3/action/datastore_search_sql?
   .then(response => response.json())
   .then(data => console.log(data));
 
+// 
