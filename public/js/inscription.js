@@ -36,10 +36,12 @@ formAuth.addEventListener('submit', async (event) => {
         if (responseJson.includes("UNIQUE constraint failed: utilisateur.courriel")) {
             error_courriel.style.display = 'block';
             error_courriel.textContent = 'Adresse courriel déjà utilisée';
-          } else if (responseJson.includes("UNIQUE constraint failed: utilisateur.nomUtilisateur")) {
+        }  
+        if (responseJson.includes("UNIQUE constraint failed: utilisateur.nom_utilisateur")) {
+            console.log('aaaaaaaaaaa');
             error_nomUtilisateur.style.display = 'block';
             error_nomUtilisateur.textContent = 'Nom d\'utilisateur déjà utilisé';
-          }
+        }
        
     }
 });
