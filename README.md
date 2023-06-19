@@ -68,7 +68,7 @@ To run the STUM system, follow the instructions below:
 - Make sure you have Node.js installed on your machine.
 - Clone the STUM repository from the Git repository.
 - Open a terminal window and navigate to the project directory.
-- Run the command npm install to install the dependencies.
-- Run the command npm start to start the server.
+- Run the command `npm install` to install the dependencies.
+- Run the command `npm start` to start the server.
 - Access the STUM application via your browser using the URL http://localhost:3000.
 
